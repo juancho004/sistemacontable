@@ -8,14 +8,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 
-$app->match('/', function () use ( $app ,$registerCode ) {
+$app->match('/', function () use ( $app ,$product ) {
 
 	return new Response(
-		$app['twig']->render( 'home.twig', array() )
+		$app['twig']->render( 'product.twig', array() )
 	);
 
 })->method('GET|POST');
 
+
+
+$app->match('/producto/{action}', function ($action) use ( $app ,$product ) {
+
+	return $app->json($product->crudProduct($action,$_POST['params']));
+
+})->method('GET|POST')->value("action",false);
+
+/*
 
 $app->match('/report', function () use ( $app ,$registerCode ) {
 
@@ -65,3 +74,4 @@ $app->match('/export', function () use ( $app ,$registerCode ) {
 	exit;
 
 })->method('GET|POST');
+*/

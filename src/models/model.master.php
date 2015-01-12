@@ -1,12 +1,12 @@
 <?php 
 /**
- * Class registger .
+ * Class master .
  *
  * @author Jcbarreno <jcbarreno.b@gmail.com>
  * @version 1.0
  * @package 
  */
-class ModelRegisterCode {
+class ModelMaster {
 
 	protected $prefix;
 	protected $app;
@@ -14,6 +14,16 @@ class ModelRegisterCode {
 	public function  __construct($app, $prefix) {
 		$this->prefix = $prefix;
 		$this->app 	= $app;
+	}
+
+	public function _debug()
+	{
+		$table 		= "{$this->prefix}acl_user";
+		$query 		= 'SELECT * FROM '.$table;
+		$user  		= $this->app['dbs']['mysql_silex']->fetchAssoc($query);
+		_pre($user);
+		exit;
+
 	}
 
 	public function validateSession($user,$password)

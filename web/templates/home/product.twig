@@ -1,0 +1,117 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
+    <script type="text/javascript">
+    var basepath = "{{ app.request.basepath }}";
+    </script>
+</head>
+<body>
+
+	<div class="row full-height split-page" style="padding:20px;">
+
+	<form id="register-product" name="register-product" method="post" >
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Nombre:
+					<input type="text" placeholder="Ingresa nombre de producto" name="name" />
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Descripción:
+					<textarea placeholder="Ingresa una descripción" name="description" ></textarea>
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-36columns">
+				<label>Precio Proveedor:
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-2 columns">
+							<div class="row collapse prefix-round">
+								<div class="small-3 columns">
+									<a href="#" class="button prefix">Q.</a>
+								</div>
+								<div class="small-9 columns">
+									<input type="text" placeholder="Quetzales" name="priceProvider" >
+								</div>
+							</div>
+						</div>
+
+						<div class="large-2 columns">
+							<div class="row collapse prefix-round">
+								<div class="small-3 columns">
+									<a href="#" class="button prefix">¢</a>
+								</div>
+								<div class="small-9 columns">
+									<input type="text" placeholder="Centavos" name="priceProviderCent" >
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-36columns">
+				<label>Precio Cliente:
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-2 columns">
+							<div class="row collapse prefix-round">
+								<div class="small-3 columns">
+									<a href="#" class="button prefix">Q.</a>
+								</div>
+								<div class="small-9 columns">
+									<input type="text" placeholder="Quetzales" name="pricelient" >
+								</div>
+							</div>
+						</div>
+
+						<div class="large-2 columns">
+							<div class="row collapse prefix-round">
+								<div class="small-3 columns">
+									<a href="#" class="button prefix">¢</a>
+								</div>
+								<div class="small-9 columns">
+									<input type="text" placeholder="Centavos" name="pricelientCent" >
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<ul class="stack button-group">
+				<li><a href="#" class="button" onclick="registerProduct();" >Guardar</a></li>
+			</ul>		
+		</div>
+
+	</form>
+</div>
+ 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
+
+	<script type="text/javascript">
+		
+		$(document).ready(function(){
+
+		});
+	</script>
+</body>
+</html>	
+
+

@@ -42,7 +42,8 @@ $app->register(new Silex\Provider\ModelsServiceProvider(), array(
   'models.path' => __DIR__ .DS.'models'.DS
 ));
 
-#$registerCode = new ModelRegisterCode($app,$prefix);
+$master   = new ModelMaster($app,$prefix);
+$product  = new ModelProduct($app,$prefix);
 
 /*
 $templates  = new modelTemplatesManager( $app, $prefix );
