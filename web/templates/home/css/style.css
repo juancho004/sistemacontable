@@ -3,3 +3,19 @@ body 	{ margin: 0px; padding: 0px; }
 	display: table-cell;
 	vertical-align: middle;
 }
+
+.error-alert {
+	border-color: #F51616 !important;
+	background: #fafafa !important;
+	box-shadow: 0 0 5px #F51616 !important;
+	outline: none;
+}
+
+tr.header-option > * img {
+	width: 1.875rem;
+	height: 1.875rem;
+	cursor: pointer;
+}
+tr.header-option * {
+	text-align: center;
+}

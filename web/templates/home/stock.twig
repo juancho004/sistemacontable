@@ -1,0 +1,104 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
+	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+    	var basepath = "{{ app.request.basepath }}";
+    	$(document).foundation();
+		$(document).ready(function(){
+		});
+    </script>
+</head>
+<body>
+
+<nav class="top-bar foundation-bar" data-topbar>
+  <ul class="title-area">
+    <li class="name">
+     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-small-only"><a href="#">Small screen</a></h1></span>
+     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-medium-only"><a href="#">Medium Screen</a></h1></span>
+     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-large-only"><a href="#">Large screen</a></h1></span>
+    </li>
+  </ul>
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right">
+      <li><a  href="#"  target="_blank">Menu 1</a></li>
+      <li><a  href="#" target="_blank">Menu 2</a></li>
+      <li><a  href="#" target="_blank">Menu 3</a></li>
+      <li class="active"><a  href="#" target="_blank">Menu 4</a></li>
+      <li><a  href="#" target="_blank">Menu 5</a></li>
+    </ul>
+  </section>
+</nav>
+
+	<div class="row full-height split-page" style="padding:20px;">
+
+	<form id="register-product" name="register-product" method="post" >
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Proveedor:
+					{{provider|raw}}
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Producto:
+					{{product|raw}}
+				</label>
+			</div>
+		</div>
+
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-5 columns">
+				<label>Total Stock:
+					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
+				</label>
+			</div>
+			<div class="large-2 columns">
+			<p></p>
+			</div>
+
+			<div class="large-5 columns">
+				<label>Minimo Stock:
+					<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" />
+				</label>
+			</div>
+
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+
+		</div>
+
+
+
+		<div class="row medium-uncollapse large-collapse">
+			<ul class="stack button-group">
+				<li><a href="#" class="button" onclick="registerStock();" >Guardar</a></li>
+			</ul>		
+		</div>
+
+	</form>
+</div>
+ 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
+	
+
+	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
+
+
+</body>
+</html>	
+
+

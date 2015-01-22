@@ -7,22 +7,78 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 
+#$app->match('/', function ($view) use ( $app ,$product ) {
+	#return $app->redirect($app['url_generator']->generate('view'));
+#})->method('GET|POST');
 
-$app->match('/', function () use ( $app ,$product ) {
+
+$app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider ) {
+
+	$array = array();
+	switch ($view) {
+		/**
+
+		*/
+		case 'productList':
+			$template 	= 'productList.twig';
+			$array 		= array( "table" => $product->crudProduct("read") );
+		break;
+
+		case 'productEdit':
+			$template 	= 'productEdit.twig';
+			$array 		= array( "table" => $product->crudProduct("edit",$id) , "id" => $id );
+		break;
+
+		case 'product':
+			$template 	= 'product.twig';
+			$array 		= array();
+		break;
+		/**
+
+		*/
+		case 'provider':
+			$template = 'provider.twig';
+		break;
+
+		case 'providerList':
+			$template = 'providerList.twig';
+			$array 		= array( "table" => $provider->crudProvider("read") );
+		break;
+
+		case 'providerEdit':
+			$template 	= 'providerEdit.twig';
+			$array 		= array( "table" => $provider->crudProvider("edit",$id) , "id" => $id );
+		break;
+		/**
+
+		*/
+		case 'stock':
+			$template = 'stock.twig';
+			$array 		= array( "provider" => $provider->getProvider(), "product" => $product->getProduct() );
+		break;
+	}
 
 	return new Response(
-		$app['twig']->render( 'product.twig', array() )
+		$app['twig']->render( $template, $array )
 	);
 
-})->method('GET|POST');
+})->method('GET|POST')->value("view","productList")->value("id",false)->bind('view');
 
 
 
-$app->match('/producto/{action}', function ($action) use ( $app ,$product ) {
+$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider ) {
 
-	return $app->json($product->crudProduct($action,$_POST['params']));
+	switch ($model) {
+		case 'product':
+			return $app->json($product->crudProduct($action,$_POST['params']));
+		break;
+		
+		case 'provider':
+			return $app->json($provider->crudProvider($action,$_POST['params']));
+		break;
+	}
 
-})->method('GET|POST')->value("action",false);
+})->method('GET|POST')->value("action",false)->value("model",false);
 
 /*
 

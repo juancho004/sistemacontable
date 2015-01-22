@@ -1,5 +1,4 @@
 <?php
-
 #error_reporting(E_ALL);
 #ini_set('display_errors','On');
 use Silex\Application;
@@ -44,6 +43,7 @@ $app->register(new Silex\Provider\ModelsServiceProvider(), array(
 
 $master   = new ModelMaster($app,$prefix);
 $product  = new ModelProduct($app,$prefix);
+$provider  = new ModelProvider($app,$prefix);
 
 /*
 $templates  = new modelTemplatesManager( $app, $prefix );
@@ -51,14 +51,14 @@ $template=$templates->_getTemplateActive();
 */
 $app->register(new TwigServiceProvider(), array(
     'twig.path'    => array(PATH_TEMPLATES_WEB.DS.'home'.DS),
-      //'twig.options' => array('cache' => PATH_CACHE.'/twig'), 
+    #'twig.options' => array('cache' => PATH_CACHE.'/twig'), 
 ));
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     return $twig;
 }));
 
-#$path=str_replace($_SERVER['DOCUMENT_ROOT'], '', PATH_TEMPLATES_WEB);
-#$app['source']=$path.'/'.$template;
+$path=str_replace($_SERVER['DOCUMENT_ROOT'], '', PATH_TEMPLATES_WEB);
+$app['source']=$path.DS;
 
 
 

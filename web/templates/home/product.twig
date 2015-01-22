@@ -5,11 +5,18 @@
     <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
     <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
     <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
+	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+
     <script type="text/javascript">
     var basepath = "{{ app.request.basepath }}";
+
+		$(document).ready(function(){
+		});
     </script>
 </head>
 <body>
+
+
 
 	<div class="row full-height split-page" style="padding:20px;">
 
@@ -18,7 +25,7 @@
 		<div class="row medium-uncollapse large-collapse">
 			<div class="large-12 columns">
 				<label>Nombre:
-					<input type="text" placeholder="Ingresa nombre de producto" name="name" />
+					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
 				</label>
 			</div>
 		</div>
@@ -26,7 +33,7 @@
 		<div class="row medium-uncollapse large-collapse">
 			<div class="large-12 columns">
 				<label>Descripción:
-					<textarea placeholder="Ingresa una descripción" name="description" ></textarea>
+					<textarea id="description" placeholder="Ingresa una descripción" name="description" ></textarea>
 				</label>
 			</div>
 		</div>
@@ -41,7 +48,7 @@
 									<a href="#" class="button prefix">Q.</a>
 								</div>
 								<div class="small-9 columns">
-									<input type="text" placeholder="Quetzales" name="priceProvider" >
+									<input type="text" placeholder="00" name="priceProvider" >
 								</div>
 							</div>
 						</div>
@@ -52,7 +59,7 @@
 									<a href="#" class="button prefix">¢</a>
 								</div>
 								<div class="small-9 columns">
-									<input type="text" placeholder="Centavos" name="priceProviderCent" >
+									<input type="text" placeholder="00" name="priceProviderCent" >
 								</div>
 							</div>
 
@@ -72,7 +79,7 @@
 									<a href="#" class="button prefix">Q.</a>
 								</div>
 								<div class="small-9 columns">
-									<input type="text" placeholder="Quetzales" name="pricelient" >
+									<input type="text" placeholder="00" name="pricelient" >
 								</div>
 							</div>
 						</div>
@@ -83,7 +90,7 @@
 									<a href="#" class="button prefix">¢</a>
 								</div>
 								<div class="small-9 columns">
-									<input type="text" placeholder="Centavos" name="pricelientCent" >
+									<input type="text" placeholder="00" name="pricelientCent" >
 								</div>
 							</div>
 
@@ -104,13 +111,12 @@
  	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
     <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
 	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
+	
 
-	<script type="text/javascript">
-		
-		$(document).ready(function(){
+	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
 
-		});
-	</script>
+
 </body>
 </html>	
 

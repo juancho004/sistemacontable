@@ -20,6 +20,7 @@ require_once PATH_VENDOR.DS.'autoload.php';
 require_once PATH_CONFIG.DS.'clib.php';
 require_once PATH_SRC.DS.'models'.DS.'model.master.php';
 require_once PATH_SRC.DS.'models'.DS.'model.product.php';
+require_once PATH_SRC.DS.'models'.DS.'model.provider.php';
 $app = require PATH_SRC.DS.'bootstrap.php';
 require PATH_SRC.DS.'controllers'.DS.'controllers.php';
 $app['debug'] = false;

@@ -1,0 +1,77 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
+    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
+	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+    var basepath = "{{ app.request.basepath }}";
+
+		$(document).ready(function(){
+		});
+    </script>
+</head>
+<body>
+
+
+
+	<div class="row full-height split-page" style="padding:20px;">
+
+	<form id="register-product" name="register-product" method="post" >
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Nombre:
+					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Telefono:
+					<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" />
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Dirección:
+					<textarea id="address" placeholder="Ingresa una descripción" name="address" ></textarea>
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>NIT:
+					<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" />
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<ul class="stack button-group">
+				<li><a href="#" class="button" onclick="registerProvider();" >Guardar</a></li>
+			</ul>		
+		</div>
+
+	</form>
+</div>
+ 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
+    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
+	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
+	
+
+	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
+
+
+</body>
+</html>	
+
+
