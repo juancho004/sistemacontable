@@ -38,7 +38,7 @@
 
 	<div class="row full-height split-page" style="padding:20px;">
 
-	<form id="register-product" name="register-product" method="post" >
+	<form id="register-stock" name="register-stock" method="post" >
 
 		<div class="row medium-uncollapse large-collapse">
 			<div class="large-12 columns">
@@ -60,7 +60,7 @@
 		<div class="row medium-uncollapse large-collapse">
 			<div class="large-5 columns">
 				<label>Total Stock:
-					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
+					<input id="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock" />
 				</label>
 			</div>
 			<div class="large-2 columns">
@@ -69,21 +69,15 @@
 
 			<div class="large-5 columns">
 				<label>Minimo Stock:
-					<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" />
+					<input id="minStock" type="text" placeholder="Ingresa nombre de producto" name="minStock" />
 				</label>
 			</div>
 
 		</div>
 
 		<div class="row medium-uncollapse large-collapse">
-
-		</div>
-
-
-
-		<div class="row medium-uncollapse large-collapse">
 			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="registerStock();" >Guardar</a></li>
+				<li><a href="#" class="button" onclick="crudStock(0,'create');" >Guardar</a></li>
 			</ul>		
 		</div>
 

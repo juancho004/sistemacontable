@@ -67,22 +67,24 @@ function registerProvider()
 	});
 }
 
-function crudStock()
+function crudStock(id,action)
 {
 
 	if( action == "edit"){
-		top.location=basepath+'/index.php/providerEdit/'+id;
+		top.location=basepath+'/index.php/stockEdit/'+id;
 		return false;
 	}
 
 	if( action == "update" ){
-		var params = $("#update-provider").serializeArray();
+		var params = $("#update-stock").serializeArray();
+	}else if( action == "create" ){
+		var params = $("#register-stock").serializeArray();
 	}else{
 		var params = id;
 	}
 
 	jQuery.ajax({
-		url: basepath+'/index.php/crud/provider/'+action,
+		url: basepath+'/index.php/crud/stock/'+action,
 		type: 'POST',
 		async: true,
 		data: {
@@ -96,16 +98,22 @@ function crudStock()
 
 			if ( !json.status ){
 				$.fancybox( '<span>'+json.message+'</span>' );
+				$.each( json.empty, function( key, value ) {
+					$("#"+value).addClass('error-alert');
+				});
+
 			}else{
 
 				if(json.reloadPage == true ){
 					jQuery.fancybox({
 						modal : true,
-						content : "<div style=\"margin:1px;width:240px;\">"+json.message+"<div style=\"text-align:right;margin-top:10px;\"><input onclick=\"jQuery.fancybox.close()\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Cancel\"><input onclick=\"top.location=basepath+'/index.php/providerList';\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Ok\"></div></div>"
+						content : "<div style=\"margin:1px;width:240px;\">"+json.message+"<div style=\"text-align:right;margin-top:10px;\"><input onclick=\"jQuery.fancybox.close()\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Cancel\"><input onclick=\"top.location=basepath+'/index.php/stockList';\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Ok\"></div></div>"
 					});
 				}else{
+
 					$("#main-tab").html(json.content);
 					$.fancybox( '<span>'+json.message+'</span>' );
+					top.location=basepath+"/index.php/stockList";
 				}
 
 
@@ -132,6 +140,14 @@ function newPrivider()
 	return false
 }
 
+function newStock()
+{
+	top.location=basepath+'/index.php/stock';
+	return false
+}
+
+
+
 function crudProduct(id,action)
 {
 
@@ -145,6 +161,7 @@ function crudProduct(id,action)
 	}else{
 		var params = id;
 	}
+
 
 	jQuery.ajax({
 		url: basepath+'/index.php/crud/product/'+action,

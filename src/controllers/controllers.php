@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #})->method('GET|POST');
 
 
-$app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider ) {
+$app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock ) {
 
 	$array = array();
 	switch ($view) {
@@ -56,6 +56,16 @@ $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider
 			$template = 'stock.twig';
 			$array 		= array( "provider" => $provider->getProvider(), "product" => $product->getProduct() );
 		break;
+
+		case 'stockList':
+			$template = 'stockList.twig';
+			$array 		= array( "table" => $stock->crudStock("read") );
+		break;
+
+		case 'stockEdit':
+			$template 	= 'stockEdit.twig';
+			$array 		= array( "table" => $stock->crudStock("edit",$id) , "id" => $id );
+		break;
 	}
 
 	return new Response(
@@ -66,7 +76,7 @@ $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider
 
 
 
-$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider ) {
+$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider, $stock ) {
 
 	switch ($model) {
 		case 'product':
@@ -75,6 +85,10 @@ $app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$pro
 		
 		case 'provider':
 			return $app->json($provider->crudProvider($action,$_POST['params']));
+		break;
+
+		case 'stock':
+			return $app->json($stock->crudStock($action,$_POST['params']));
 		break;
 	}
 

@@ -87,15 +87,19 @@ class ModelProduct {
 
 	}
 
-	public function getProduct()
+	public function getProduct($id=false)
 	{
 		$query = "SELECT * FROM {$this->tabproduct} ";
 		
 		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
-		$select = "<select id='select-product' name='select-product' >";
+		$select = "<select id='select_product' name='select_product' >";
 
 		foreach ($list as $key => $value) {
-			$select.='<option value="'.$value['id'].'">'.$value['name'].'</option>';
+			if( $value['id'] == $id ){
+				$select.='<option value="'.$value['id'].'" selected>'.$value['name'].'</option>';
+			}else{
+				$select.='<option value="'.$value['id'].'">'.$value['name'].'</option>';
+			}
 		}
 		$select.= "</select>";
 		return $select;

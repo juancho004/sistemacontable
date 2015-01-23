@@ -44,6 +44,7 @@ $app->register(new Silex\Provider\ModelsServiceProvider(), array(
 $master   = new ModelMaster($app,$prefix);
 $product  = new ModelProduct($app,$prefix);
 $provider  = new ModelProvider($app,$prefix);
+$stock  = new ModelStock($app,$prefix);
 
 /*
 $templates  = new modelTemplatesManager( $app, $prefix );
