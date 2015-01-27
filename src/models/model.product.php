@@ -60,6 +60,7 @@ class ModelProduct {
 				foreach ($params as $key => $value) {
 					$data[$value['name']] = $value['value'];
 				}
+				$dataForm 					= new stdClass();
 				$pricePriver 				= (int)$data['priceProvider'].".".(int)$data['priceProviderCent'];
 				$priceClient 				= (int)$data['pricelient'].".".(int)$data['pricelientCent'];
 				$dataForm->id 				= $data['id'];
@@ -107,6 +108,7 @@ class ModelProduct {
 
 	public function update($query)
 	{
+		$response 					= new stdClass();
 		$resp = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
 		$response->status 	= $resp;
 		$response->reloadPage	= true;
@@ -129,8 +131,8 @@ class ModelProduct {
 					<td>'.$value['providerPrice'].'</td>
 					<td>'.$value['userPrice'].'</td>
 					<td>
-						<img onClick="crudProduct( \''.$value['id'].'\',\''.delete.'\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-delete.svg" >
-						<img onClick="crudProduct( \''.$value['id'].'\',\''.edit.'\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-edit.svg" >
+						<img onClick="crudProduct( \''.$value['id'].'\',\'delete\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-delete.svg" >
+						<img onClick="crudProduct( \''.$value['id'].'\',\'edit\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-edit.svg" >
 					</td>
 					</tr>';
 				}	

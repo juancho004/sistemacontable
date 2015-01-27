@@ -45,6 +45,8 @@ $master   = new ModelMaster($app,$prefix);
 $product  = new ModelProduct($app,$prefix);
 $provider  = new ModelProvider($app,$prefix);
 $stock  = new ModelStock($app,$prefix);
+$client  = new ModelClient($app,$prefix);
+$sale  = new ModelSale($app,$prefix);
 
 /*
 $templates  = new modelTemplatesManager( $app, $prefix );

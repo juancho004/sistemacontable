@@ -6,7 +6,7 @@
  * @version 1.0
  * @package 
  */
-class ModelStock {
+class ModelSale {
 
 	protected $prefix;
 	protected $app;
@@ -15,12 +15,88 @@ class ModelStock {
 	{
 		$this->prefix = $prefix;
 		$this->app 	= $app;
-		$this->tabStock 	= "{$this->prefix}stock";
-		$this->tabProvider 	= "{$this->prefix}provider";
-		$this->tabProduct 	= "{$this->prefix}product";
+		$this->tabSale 	= "{$this->prefix}sale";
+		$this->stock 	= new ModelStock($app,$prefix);
+	}
 
-		$this->provider 	= new ModelProvider($app,$prefix);
-		$this->product 		= new ModelProduct($app,$prefix);
+	public function productSale($option = false )
+	{
+		$drop = '';
+		if($option){
+			$drop = '<div style="cursor:pointer;" class="remove-item">X</div>';
+		}
+
+		$productSale = '
+		<div class="row medium-uncollapse large-collapse">
+		'.$drop.'
+			<div class="large-5 columns">
+				<label>Producto:
+					'.$this->stock->getStock().'
+				</label>
+			</div>
+			
+			<div class="large-2 columns">
+				<span>&nbsp;</span>
+			</div>
+			
+			<div class="large-5 columns">
+				<label>Cantidad:
+					<input class="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock[]" />
+				</label>
+			</div>
+
+		</div>';
+		return $productSale;
+	}
+
+	public function registerSale($params)
+	{
+		$listSale		= array();
+		$client 		= $params['select_client'];
+		$listProduct 	= $params['select_product'];
+		$listTotalItem 	= $params['totalStock'];
+		$registerDate	= date("Y-m-d H:i:s");
+		$correlative 	= $this->getCorrelativeNumber();
+
+		for ($i=0; $i < count($listProduct); $i++) { 
+			$listSale[] = array("item" => $listProduct[$i], "total" => $listTotalItem[$i] );
+		}
+
+		$this->stock->discountStock();
+
+		$query = "INSERT INTO fc_sale (registerDate, billNumber, id_user, id_client) VALUES ('".$registerDate."', '".$correlative."', '1', ".$client.") ";
+		$this->app['dbs']['mysql_silex']->executeQuery($query);
+		$id_sale = $this->app['db']->lastInsertId('id');
+
+
+		foreach ($listSale as $key => $value) {
+			$query = "INSERT INTO fc_bill (totalProduct, id_sale, id_stock) VALUES (".$value['total'].", ".$id_sale.", ".$value['item'].") ";
+			$this->app['dbs']['mysql_silex']->executeQuery($query);
+		}
+
+
+
+		
+		#_pre($correlative);
+		#exit;
+	}
+
+	public function getCorrelativeNumber()
+	{
+		
+		try{
+			$query = "SELECT billNumber FROM {$this->tabSale} ORDER BY billNumber DESC";
+			$code = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
+			$code = $code['billNumber'];
+			#_pre($code);exit;
+
+		}catch(Exception $e){
+			$code = 0;
+		}
+		$code++;
+		#$code = str_pad($code, 10, "0", STR_PAD_LEFT);
+
+		return $code;
 	}
 
 	public function crudStock($view=false,$params=false)
@@ -52,8 +128,8 @@ class ModelStock {
 					return $exist;
 				}
 
-				$query = "insert into {$table} (totalStock,minStock,id_provider,id_product,realStock) ";
-				$query.= "values (".$dataForm->totalStock.",".$dataForm->minStock.",".$dataForm->id_provider.",".$dataForm->id_product.",".$dataForm->totalStock.")";
+				$query = "insert into {$table} (totalStock,minStock,id_provider,id_product) ";
+				$query.= "values (".$dataForm->totalStock.",".$dataForm->minStock.",".$dataForm->id_provider.",".$dataForm->id_product.")";
 				return $this->insert($query,$table);
 
 			break;
@@ -99,7 +175,7 @@ class ModelStock {
 					return $isValid;
 				}
 		
-				return $this->update('UPDATE '.$table.' SET totalStock='.$this->app->escape($dataForm->totalStock).', minStock='.$this->app->escape($dataForm->minStock).', realStock='.$this->app->escape($dataForm->totalStock).' WHERE id_provider = '.$dataForm->id_provider.' AND id_product = '.$dataForm->id_product.' AND id = '.$dataForm->id.' ');
+				return $this->update('UPDATE '.$table.' SET totalStock='.$this->app->escape($dataForm->totalStock).', minStock='.$this->app->escape($dataForm->minStock).' WHERE id_provider = '.$dataForm->id_provider.' AND id_product = '.$dataForm->id_product.' AND id = '.$dataForm->id.' ');
 				
 			break;
 
@@ -290,62 +366,6 @@ class ModelStock {
 			$response->status 	= FALSE;
 			$response->message 	= "Error #02: No se pudo eliminar el registro.";
 			return $e->getMessage();
-		}
-	}
-
-	public function getStock()
-	{
-		$query = "SELECT s.id, pt.name as product 
-				FROM {$this->tabStock} s 
-				INNER JOIN {$this->tabProvider} as pr 
-				ON s.id_provider = pr.id
-				INNER JOIN {$this->tabProduct} as pt 
-				ON s.id_product = pt.id ";
-
-		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
-
-		$select = "<select class='select_product' name='select_product[]' >";
-		$select.='<option value="">Selecciona un producto</option>';
-
-		foreach ($list as $key => $value) {
-				$select.='<option value="'.$value['id'].'">'.$value['product'].'</option>';
-		}
-		$select.= "</select>";
-
-		return $select;
-	}
-
-	public function discountStock($listSale)
-	{
-		foreach ($listSale as $key => $value) {
-			
-			#validar si existe stock suficiente
-			$query = "SELECT id FROM {$this->tabStock} WHERE id = {$value['item']} AND totalStock > {$value['total']} ";
-			$exist = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
-			$total = ( count($exist['id']) > 0 )? TRUE:FALSE;
-
-			#validar si el minimo en stock es valido
-			if( $total ){
-				$query = "SELECT id FROM {$this->tabStock} WHERE id = {$value['item']} AND totalStock > minStock ";
-				$exist = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
-				$min = ( count($exist['id']) > 0 )? TRUE:FALSE;
-				
-				
-					#descontar del total de stock
-					$query 	= "UPDATE {$this->tabStock} SET  totalStock =  (totalStock - {$value['total']}) WHERE  id = {$value['item']} ";
-					$update = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
-					if(!$update){
-						return 'A ocurrido un error al momento de actualizar el stock, por favor validar con el administrador.';
-					}
-					if( $min ){
-						return 'Se ha consumido el minimo de productos, por favor contacatar al proveedor.';
-					}
-
-			}else{
-				return 'Ya no hay productos en Stock suficientes.';
-			}
-
-			
 		}
 	}
 

@@ -6,65 +6,104 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
+$app->match('/registersale', function () use ( $app, $sale, $client ) {
 
-#$app->match('/', function ($view) use ( $app ,$product ) {
-	#return $app->redirect($app['url_generator']->generate('view'));
-#})->method('GET|POST');
+	$sale->registerSale($_POST);
+	$template 	= 'sale.twig';
+	$array 		= array( "client" => $client->getClient(), "productSale" => $sale->productSale() );
+		return new Response(
+		$app['twig']->render( $template, $array )
+	);
+
+})->method('GET|POST');
+
+$app->match('/itemSale', function () use ( $app, $sale ) {
+
+	$item = array("item" => $sale->productSale(true) );
+	return $app->json($item);
+
+})->method('GET|POST');
 
 
-$app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock ) {
+$app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock, $client, $sale, $master ) {
 
 	$array = array();
+	$template ="";
 	switch ($view) {
 		/**
-
+		PRODUCT
 		*/
 		case 'productList':
 			$template 	= 'productList.twig';
-			$array 		= array( "table" => $product->crudProduct("read") );
+			$array 		= array( "table" => $product->crudProduct("read"),"menu" => $master->getMenu() );
 		break;
 
 		case 'productEdit':
 			$template 	= 'productEdit.twig';
-			$array 		= array( "table" => $product->crudProduct("edit",$id) , "id" => $id );
+			$array 		= array( "table" => $product->crudProduct("edit",$id) , "id" => $id,"menu" => $master->getMenu() );
 		break;
 
 		case 'product':
 			$template 	= 'product.twig';
-			$array 		= array();
+			$array 		= array("menu" => $master->getMenu());
 		break;
 		/**
-
+		PROVIDER
 		*/
 		case 'provider':
 			$template = 'provider.twig';
+			$array = array("menu" => $master->getMenu());
 		break;
 
 		case 'providerList':
 			$template = 'providerList.twig';
-			$array 		= array( "table" => $provider->crudProvider("read") );
+			$array 		= array( "table" => $provider->crudProvider("read"),"menu" => $master->getMenu() );
 		break;
 
 		case 'providerEdit':
 			$template 	= 'providerEdit.twig';
-			$array 		= array( "table" => $provider->crudProvider("edit",$id) , "id" => $id );
+			$array 		= array( "table" => $provider->crudProvider("edit",$id) , "id" => $id,"menu" => $master->getMenu() );
 		break;
 		/**
-
+		STOCK
 		*/
 		case 'stock':
 			$template = 'stock.twig';
-			$array 		= array( "provider" => $provider->getProvider(), "product" => $product->getProduct() );
+			$array 		= array( "provider" => $provider->getProvider(), "product" => $product->getProduct(),"menu" => $master->getMenu() );
 		break;
 
 		case 'stockList':
 			$template = 'stockList.twig';
-			$array 		= array( "table" => $stock->crudStock("read") );
+			$array 		= array( "table" => $stock->crudStock("read"),"menu" => $master->getMenu() );
 		break;
 
 		case 'stockEdit':
 			$template 	= 'stockEdit.twig';
-			$array 		= array( "table" => $stock->crudStock("edit",$id) , "id" => $id );
+			$array 		= array( "table" => $stock->crudStock("edit",$id) , "id" => $id,"menu" => $master->getMenu() );
+		break;
+		/**
+		CLIENT
+		*/
+		case 'client':
+			$template = 'client.twig';
+			$array 		= array("menu" => $master->getMenu());
+		break;
+
+		case 'clientList':
+			$template = 'clientList.twig';
+			$array 		= array( "table" => $client->crudClient("read"),"menu" => $master->getMenu() );
+		break;
+
+		case 'clientEdit':
+			$template 	= 'clientEdit.twig';
+			$array 		= array( "table" => $client->crudClient("edit",$id) , "id" => $id,"menu" => $master->getMenu() );
+		break;
+		/**
+		SALE
+		*/
+		case 'sale':
+			$template 	= 'sale.twig';
+			$array 		= array( "client" => $client->getClient(), "productSale" => $sale->productSale(),"menu" => $master->getMenu() );
 		break;
 	}
 
@@ -76,7 +115,7 @@ $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider
 
 
 
-$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider, $stock ) {
+$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider, $stock, $client ) {
 
 	switch ($model) {
 		case 'product':
@@ -90,9 +129,16 @@ $app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$pro
 		case 'stock':
 			return $app->json($stock->crudStock($action,$_POST['params']));
 		break;
+
+		case 'client':
+			return $app->json($client->crudClient($action,$_POST['params']));
+		break;
 	}
 
 })->method('GET|POST')->value("action",false)->value("model",false);
+
+
+
 
 /*
 

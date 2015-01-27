@@ -1,3 +1,50 @@
+function newItemSale()
+{
+
+	jQuery.ajax({
+		url: basepath+'/index.php/itemSale',
+		type: 'POST',
+		async: true,
+		dataType: 'json',
+		beforeSend: function(xhr){
+			$.fancybox.showLoading();
+		},
+		success: function(json){
+			$(".item-sale").append(json.item);
+		},	
+		complete: function(xhr, textStatus){
+			jQuery.fancybox.hideLoading();
+		}
+	});
+
+}
+
+function sale()
+{
+
+	/*jQuery.ajax({
+		url: basepath+'/index.php/registersale',
+		type: 'POST',
+		async: true,
+		data: {
+			params: $("#register-sale").serialize()
+		},
+		dataType: 'json',
+		beforeSend: function(xhr){
+			$.fancybox.showLoading();
+		},
+		success: function(json){
+			$(".item-sale").append(json.item);
+		},	
+		complete: function(xhr, textStatus){
+			jQuery.fancybox.hideLoading();
+		}
+	});
+	*/
+
+}
+
+
 function registerProduct()
 {
 	jQuery.ajax({
@@ -66,6 +113,67 @@ function registerProvider()
 		}
 	});
 }
+
+function crudClient(id,action)
+{
+
+	if( action == "edit"){
+		top.location=basepath+'/index.php/clientEdit/'+id;
+		return false;
+	}
+
+	if( action == "update" ){
+		var params = $("#update-client").serializeArray();
+	}else if( action == "create" ){
+		var params = $("#register-client").serializeArray();
+	}else{
+		var params = id;
+	}
+
+	jQuery.ajax({
+		url: basepath+'/index.php/crud/client/'+action,
+		type: 'POST',
+		async: true,
+		data: {
+			params: params
+		},
+		dataType: 'json',
+		beforeSend: function(xhr){
+			$.fancybox.showLoading();
+		},
+		success: function(json){
+
+			if ( !json.status ){
+				$.fancybox( '<span>'+json.message+'</span>' );
+				$.each( json.empty, function( key, value ) {
+					$("#"+value).addClass('error-alert');
+				});
+
+			}else{
+
+				if(json.reloadPage == true ){
+					jQuery.fancybox({
+						modal : true,
+						content : "<div style=\"margin:1px;width:240px;\">"+json.message+"<div style=\"text-align:right;margin-top:10px;\"><input onclick=\"jQuery.fancybox.close()\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Cancel\"><input onclick=\"top.location=basepath+'/index.php/clientList';\" style=\"margin:3px;padding:0px;\" type=\"button\" value=\"Ok\"></div></div>"
+					});
+				}else{
+
+					$("#main-tab").html(json.content);
+					$.fancybox( '<span>'+json.message+'</span>' );
+					top.location=basepath+"/index.php/clientList";
+				}
+
+
+			}
+		},	
+		complete: function(xhr, textStatus){
+			jQuery.fancybox.hideLoading();
+		}
+	});
+
+	return false;
+}
+
 
 function crudStock(id,action)
 {
@@ -146,6 +254,11 @@ function newStock()
 	return false
 }
 
+function newClient()
+{
+	top.location=basepath+'/index.php/client';
+	return false
+}
 
 
 function crudProduct(id,action)

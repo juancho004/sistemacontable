@@ -6,7 +6,7 @@
  * @version 1.0
  * @package 
  */
-class ModelProvider {
+class ModelClient {
 
 	protected $prefix;
 	protected $app;
@@ -15,13 +15,12 @@ class ModelProvider {
 	{
 		$this->prefix = $prefix;
 		$this->app 	= $app;
-		$this->tabprovider 	= "{$this->prefix}provider";
+		$this->tabClient 	= "{$this->prefix}client";
 	}
 
-	public function crudProvider($view=false,$params=false)
+	public function crudClient($view=false,$params=false)
 	{
-
-		$table 		= $this->tabprovider;
+		$table 		= $this->tabClient;
 		$data 		= array();
 		$dataForm	= new stdClass();
 
@@ -32,7 +31,8 @@ class ModelProvider {
 				}
 
 				$dataForm->name 	= $data['name'];
-				$dataForm->phone 	= (!preg_match('/^[0-9]{8,9}$/', (int)$data['phone']) )? "":$data['phone'];
+				$dataForm->lastName = $data['lastName'];
+				$dataForm->phone 	= $data['phone'];
 				$dataForm->address 	= $data['address'];
 				$dataForm->nit 		= $data['nit'];
 
@@ -42,18 +42,27 @@ class ModelProvider {
 					return $isValid;
 				}
 
-				$query = "insert into {$table} (name,phoneNumber,address,nit) ";
-				$query.= "values ('".$dataForm->name."',".$dataForm->phone.",'".$dataForm->address."','".$dataForm->nit."')";
+				$exist = $this->validateExistClient($dataForm->nit,$table);
+
+				if ( !$exist->status ){
+					return $exist;
+				}
+
+				$query = "insert into {$table} (name,lastName,nit,address,phoneNumber) ";
+				$query.= "values ('".$dataForm->name."','".$dataForm->lastName."',".$dataForm->phone.",'".$dataForm->address."','".$dataForm->nit."')";
 				return $this->insert($query,$table);
 
 			break;
 			
 			case 'read':
-				return $this->getListProvider("SELECT * FROM {$table}");
+
+				$query = "SELECT * FROM {$table} ";
+				return $this->getListStock($query);
 			break;
 
 			case 'edit':
-				return $this->getListProvider("SELECT * FROM {$table} WHERE id = {$params}",true);
+				$query = "SELECT * FROM {$table} WHERE id = {$params}";
+				return $this->getListStock($query,true);
 			break;
 
 			case 'update':
@@ -64,16 +73,18 @@ class ModelProvider {
 
 				$dataForm->id 		= $data['id'];
 				$dataForm->name 	= $data['name'];
+				$dataForm->lastName = $data['lastName'];
 				$dataForm->phone 	= $data['phone'];
 				$dataForm->address 	= $data['address'];
 				$dataForm->nit 		= $data['nit'];
+
 				$isValid 			= $this->validateEmptyForm($dataForm);
 
 				if ( !$isValid->status ){
 					return $isValid;
 				}
 		
-				return $this->update('UPDATE '.$table.' SET name="'.$this->app->escape($dataForm->name).'", phoneNumber="'.$this->app->escape($dataForm->phone).'", address="'.$dataForm->address.'", nit="'.$dataForm->nit.'" WHERE id = '.$dataForm->id.'');
+				return $this->update('UPDATE '.$table.' SET name="'.$this->app->escape($dataForm->name).'", lastName="'.$this->app->escape($dataForm->lastName).'",nit="'.$this->app->escape($dataForm->nit).'",address="'.$this->app->escape($dataForm->address).'",phoneNumber='.$this->app->escape($dataForm->phone).' WHERE id = '.$dataForm->id.' ');
 				
 			break;
 
@@ -87,28 +98,40 @@ class ModelProvider {
 
 	}
 
-	public function getProvider($id=false)
+	public function validateExistClient($nit,$table)
 	{
-		$query = "SELECT * FROM {$this->tabprovider} ";
-		
-		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
-		$select = "<select id='select_provider' name='select_provider' >";
+		$response = new stdClass();
+		try{
 
-		foreach ($list as $key => $value) {
-			if( $value['id'] == $id ){
-				$select.='<option value="'.$value['id'].'" selected >'.$value['name'].'</option>';
-			}else{
-				$select.='<option value="'.$value['id'].'">'.$value['name'].'</option>';	
-			}
+			$query = "SELECT id FROM {$table} WHERE nit = '{$nit}' ";
+			#_pre($query);exit;
+			$exist = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
+			$total = !(boolean)count($exist['id']);
 			
+			if(!$total){
+				$response->status 	= FALSE;
+				$response->message 	= "El registro ya existe, si quieres actualizarlo, ve a la sección de actualización";
+			}else{
+				$response->status 	= TRUE;
+				$response->message 	= "Ok";
+			}
+
+			return $response;
+		}catch(Exception $e){
+			$response->status 	= FALSE;
+			$response->message 	= "Error #01: No se pudo insertar en en la tabla {$table}.";
+			return $e->getMessage();
 		}
-		$select.= "</select>";
-		return $select;
+
+
+		
+
 	}
 
 	public function update($query)
 	{
-		$response = new stdClass();
+		#_pre($query);
+		#exit;
 		$resp = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
 		$response->status 	= $resp;
 		$response->reloadPage	= true;
@@ -116,8 +139,9 @@ class ModelProvider {
 		return $response;
 	}
 
-	public function getListProvider($query,$action=false)
+	public function getListStock($query,$action=false)
 	{
+
 
 		$htmlList = "";
 		try{
@@ -127,16 +151,18 @@ class ModelProvider {
 				foreach ($list as $key => $value) {
 					$htmlList.= '<tr class="header-option" >
 					<td>'.$value['name'].'</td>
-					<td>'.$value['phoneNumber'].'</td>
-					<td>'.$value['address'].'</td>
+					<td>'.$value['lastName'].'</td>
 					<td>'.$value['nit'].'</td>
+					<td>'.$value['address'].'</td>
+					<td>'.$value['phoneNumber'].'</td>
 					<td>
-						<img onClick="crudProvider( \''.$value['id'].'\',\'delete\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-delete.svg" >
-						<img onClick="crudProvider( \''.$value['id'].'\',\'edit\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-edit.svg" >
+						<img onClick="crudClient( \''.$value['id'].'\',\'delete\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-delete.svg" >
+						<img onClick="crudClient( \''.$value['id'].'\',\'edit\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-edit.svg" >
 					</td>
 					</tr>';
 				}	
 			}else{
+				
 				foreach ($list as $key => $value) {
 
 					$htmlList.='<input type="hidden" value="'.$value['id'].'" name="id" />';
@@ -144,7 +170,15 @@ class ModelProvider {
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
 									<label>Nombre:
-										<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" value="'.$value['name'].'"/>
+										<input id="name" type="text" placeholder="Ingresa nombre" name="name" value="'.$value['name'].'" />
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Apellido:
+										<input id="lastName" type="text" placeholder="Ingresa apellido" name="lastName" value="'.$value['lastName'].'" />
 									</label>
 								</div>
 							</div>
@@ -152,7 +186,7 @@ class ModelProvider {
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
 									<label>Telefono:
-										<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone"  value="'.$value['phoneNumber'].'" />
+										<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" value="'.$value['phoneNumber'].'" />
 									</label>
 								</div>
 							</div>
@@ -168,7 +202,7 @@ class ModelProvider {
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
 									<label>NIT:
-										<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" value="'.$value['nit'].'"/>
+										<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" value="'.$value['nit'].'" />
 									</label>
 								</div>
 							</div>';
@@ -241,7 +275,7 @@ class ModelProvider {
 										</tr>
 									</thead>
 									<tbody>
-										'.$this->crudProvider("read").'
+										'.$this->crudClient("read").'
 									</tbody>
 								</table>';
 			return $response;
@@ -250,6 +284,22 @@ class ModelProvider {
 			$response->message 	= "Error #02: No se pudo eliminar el registro.";
 			return $e->getMessage();
 		}
+	}
+
+	public function getClient()
+	{
+		$query = "SELECT id, name FROM {$this->tabClient} ";
+		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+		$select = "<select id='select_client' name='select_client' >";
+		$select.='<option value="">Selecciona un cliente</option>';
+
+		foreach ($list as $key => $value) {
+				$select.='<option value="'.$value['id'].'">'.$value['name'].'</option>';
+		}
+		$select.= "</select>";
+
+		return $select;
 	}
 
 }

@@ -19,20 +19,25 @@
 	{{menu|raw}}
 
 	<div class="row full-height split-page" style="padding:20px;">
+	<div id="new-client" onclick="newClient()">Nuevo</div>
 		<div id="main-tab">
-			<form id="update-provider" name="update-provider" method="post" >
-				{{table|raw}}
-			</form>
+			<table>
+				<thead>
+					<tr >
+						<th width="200" >Nombre</th>
+						<th width="150" >Apellido</th>
+						<th width="450" >NIT</th>
+						<th width="150" >Dirección</th>
+						<th width="150" >Teléfono</th>
+						<th width="150" ></th>
+					</tr>
+				</thead>
+				<tbody>
+					{{table|raw}}
+				</tbody>
+			</table>
 		</div>
 
-
-
-
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="crudProvider('{{id|raw}}','update');" >Guardar</a></li>
-			</ul>		
-		</div>
 </div>
  	<script src="{{ app.source }}home/js/function.js"></script>
     <script src="{{ app.source }}home/js/vendor/fastclick.js"></script>

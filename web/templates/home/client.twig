@@ -20,12 +20,20 @@
 
 	<div class="row full-height split-page" style="padding:20px;">
 
-	<form id="register-product" name="register-product" method="post" >
+	<form id="register-client" name="register-client" method="post" >
 
 		<div class="row medium-uncollapse large-collapse">
 			<div class="large-12 columns">
 				<label>Nombre:
-					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
+					<input id="name" type="text" placeholder="Ingresa nombre" name="name" />
+				</label>
+			</div>
+		</div>
+
+		<div class="row medium-uncollapse large-collapse">
+			<div class="large-12 columns">
+				<label>Apellido:
+					<input id="lastName" type="text" placeholder="Ingresa apellido" name="lastName" />
 				</label>
 			</div>
 		</div>
@@ -56,7 +64,7 @@
 
 		<div class="row medium-uncollapse large-collapse">
 			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="registerProvider();" >Guardar</a></li>
+				<li><a href="#" class="button" onclick="crudClient(0,'create');" >Guardar</a></li>
 			</ul>		
 		</div>
 

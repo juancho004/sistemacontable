@@ -22,6 +22,8 @@ require_once PATH_SRC.DS.'models'.DS.'model.master.php';
 require_once PATH_SRC.DS.'models'.DS.'model.product.php';
 require_once PATH_SRC.DS.'models'.DS.'model.provider.php';
 require_once PATH_SRC.DS.'models'.DS.'model.stock.php';
+require_once PATH_SRC.DS.'models'.DS.'model.client.php';
+require_once PATH_SRC.DS.'models'.DS.'model.sale.php';
 $app = require PATH_SRC.DS.'bootstrap.php';
 require PATH_SRC.DS.'controllers'.DS.'controllers.php';
 $app['debug'] = false;
