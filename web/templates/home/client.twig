@@ -1,85 +1,69 @@
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
-	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+{% extends "layout.twig" %}
 
-    <script type="text/javascript">
-    var basepath = "{{ app.request.basepath }}";
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+			{% block mainmenu %}
+				{{menu|raw}}
+			{% endblock %}
 
-		$(document).ready(function(){
-		});
-    </script>
-</head>
-<body>
+			{% block mainalert %}
+			{% endblock %}
 
-	{{menu|raw}}
+			{% block content %}
+				<form id="register-client" name="register-client" method="post" >
 
-	<div class="row full-height split-page" style="padding:20px;">
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>Nombre:
+								<input id="name" type="text" placeholder="Ingresa nombre" name="name" />
+							</label>
+						</div>
+					</div>
 
-	<form id="register-client" name="register-client" method="post" >
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>Apellido:
+								<input id="lastName" type="text" placeholder="Ingresa apellido" name="lastName" />
+							</label>
+						</div>
+					</div>
 
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Nombre:
-					<input id="name" type="text" placeholder="Ingresa nombre" name="name" />
-				</label>
-			</div>
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>Telefono:
+								<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" />
+							</label>
+						</div>
+					</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>Dirección:
+								<textarea id="address" placeholder="Ingresa una descripción" name="address" ></textarea>
+							</label>
+						</div>
+					</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>NIT:
+								<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" />
+							</label>
+						</div>
+					</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<ul class="stack button-group">
+							<li><a href="#" class="button" onclick="crudClient(0,'create');" >Guardar</a></li>
+						</ul>		
+					</div>
+				</form>
+			{% endblock %}
+			<a class="exit-off-canvas"></a>
 		</div>
+	</div>
+{% endblock %}
 
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Apellido:
-					<input id="lastName" type="text" placeholder="Ingresa apellido" name="lastName" />
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Telefono:
-					<input id="phone" type="text" placeholder="Ingresa nombre de producto" name="phone" />
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Dirección:
-					<textarea id="address" placeholder="Ingresa una descripción" name="address" ></textarea>
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>NIT:
-					<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" />
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="crudClient(0,'create');" >Guardar</a></li>
-			</ul>		
-		</div>
-
-	</form>
-</div>
- 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
-	
-
-	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
-
-
-</body>
-</html>	
-
-
+{% block mainjquery %}
+{% endblock %}

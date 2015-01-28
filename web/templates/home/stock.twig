@@ -1,80 +1,69 @@
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
-	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+{% extends "layout.twig" %}
 
-    <script type="text/javascript">
-    	var basepath = "{{ app.request.basepath }}";
-    	$(document).foundation();
-		$(document).ready(function(){
-		});
-    </script>
-</head>
-<body>
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+			{% block mainmenu %}
+				{{menu|raw}}
+			{% endblock %}
 
-	{{menu|raw}}
+			{% block mainalert %}
+				<div id="mainAlert1" data-alert class="alert-box" tabindex="0" aria-live="assertive" role="dialogalert">
+					<span>Mensaje de alerta</span>
+					<button href="#" tabindex="0" class="close" aria-label="Close Alert">&times;</button>
+				</div>
+				<span data-tooltip aria-haspopup="true" class="has-tip" title="Tooltips are awesome, you should totally use them!">extended information</span>
+			{% endblock %}
 
-	<div class="row full-height split-page" style="padding:20px;">
+			{% block content %}
+					<form id="register-stock" name="register-stock" method="post" >
 
-	<form id="register-stock" name="register-stock" method="post" >
+						<div class="row medium-uncollapse large-collapse">
+							<div class="large-12 columns">
+								<label>Proveedor:
+									{{provider|raw}}
+								</label>
+							</div>
+						</div>
 
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Proveedor:
-					{{provider|raw}}
-				</label>
-			</div>
+						<div class="row medium-uncollapse large-collapse">
+							<div class="large-12 columns">
+								<label>Producto:
+									{{product|raw}}
+								</label>
+							</div>
+						</div>
+
+						<div class="row medium-uncollapse large-collapse">
+							<div class="large-5 columns">
+								<label>Total Stock:
+									<input id="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock" />
+								</label>
+							</div>
+							<div class="large-2 columns">
+							<p></p>
+							</div>
+
+							<div class="large-5 columns">
+								<label>Minimo Stock:
+									<input id="minStock" type="text" placeholder="Ingresa nombre de producto" name="minStock" />
+								</label>
+							</div>
+
+						</div>
+
+						<div class="row medium-uncollapse large-collapse">
+							<ul class="stack button-group">
+								<li><a href="#" class="button" onclick="crudStock(0,'create');" >Guardar</a></li>
+							</ul>
+						</div>
+
+					</form>
+			{% endblock %}
+			<a class="exit-off-canvas"></a>
 		</div>
+	</div>
+{% endblock %}
 
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Producto:
-					{{product|raw}}
-				</label>
-			</div>
-		</div>
-
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-5 columns">
-				<label>Total Stock:
-					<input id="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock" />
-				</label>
-			</div>
-			<div class="large-2 columns">
-			<p></p>
-			</div>
-
-			<div class="large-5 columns">
-				<label>Minimo Stock:
-					<input id="minStock" type="text" placeholder="Ingresa nombre de producto" name="minStock" />
-				</label>
-			</div>
-
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="crudStock(0,'create');" >Guardar</a></li>
-			</ul>		
-		</div>
-
-	</form>
-</div>
- 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
-	
-
-	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
-
-
-</body>
-</html>	
-
-
+{% block mainjquery %}
+{% endblock %}

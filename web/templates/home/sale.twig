@@ -1,70 +1,55 @@
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
-	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+{% extends "layout.twig" %}
 
-    <script type="text/javascript">
-    	var basepath = "{{ app.request.basepath }}";
-    	$(document).foundation();
-		$(document).ready(function(){
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+			{% block mainmenu %}
+				{{menu|raw}}
+			{% endblock %}
 
-			$( "#register-sale" ).delegate( ".remove-item", "click", function() {
-				$(this).parent().remove();
-			});
+			{% block mainalert %}
+			{% endblock %}
 
-			$( "#register-sale" ).delegate( ".select_product", "change", function() {
-				var id = $(this).val();
-				var block = $(this).parent().html();
-			});
+			{% block content %}
+				<div class="new-item-sale btn-new-item" onclick="newItemSale()">Nuevo</div>
+				<form id="register-sale" name="register-sale" method="post" action="./registersale">
 
-		});
-    </script>
-</head>
-<body>
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-12 columns">
+							<label>Cliente:
+							{{client|raw}}
+							</label>
+						</div>
+					</div>
 
-	{{menu|raw}}
+					<div class="item-sale row medium-uncollapse large-collapse">
+						{{productSale|raw}}
+					</div>
 
-	<div class="row full-height split-page" style="padding:20px;">
+					<div class="row medium-uncollapse large-collapse">
+						<ul class="stack button-group">
+							<!--<li><a href="#" class="button" onclick="sale();" >Guardar</a></li>-->
+							<li><input type="submit" value="Guardar" class="button"/></li>
+						</ul>
+					</div>
 
+				</form>
 
-	<div class="new-item-sale" onclick="newItemSale()">Nuevo</div>
-	<form id="register-sale" name="register-sale" method="post" action="./registersale">
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Cliente:
-				{{client|raw}}
-				</label>
-			</div>
+			{% endblock %}
+			<a class="exit-off-canvas"></a>
 		</div>
+	</div>
+{% endblock %}
 
-		<div class="item-sale row medium-uncollapse large-collapse">
-			{{productSale|raw}}
-		</div>
+{% block mainjquery %}
 
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<!--<li><a href="#" class="button" onclick="sale();" >Guardar</a></li>-->
-				<li><input type="submit" value="Guardar" class="button"/></li>
-			</ul>		
-		</div>
+	$( "#register-sale" ).delegate( ".remove-item", "click", function() {
+		$(this).parent().remove();
+	});
 
-	</form>
-</div>
- 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
-	
+	$( "#register-sale" ).delegate( ".select_product", "change", function() {
+		var id = $(this).val();
+		var block = $(this).parent().html();
+	});
 
-	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
-
-
-</body>
-</html>	
-
-
+{% endblock %}

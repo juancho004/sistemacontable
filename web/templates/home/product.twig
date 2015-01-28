@@ -1,123 +1,110 @@
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/foundation.min.js"></script>
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/foundation.css" />
-    <link rel="stylesheet" href="{{ app.request.basepath }}/templates/home/css/style.css" />
-	<link href="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+{% extends "layout.twig" %}
 
-    <script type="text/javascript">
-    var basepath = "{{ app.request.basepath }}";
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+			{% block mainmenu %}
+				{{menu|raw}}
+			{% endblock %}
 
-		$(document).ready(function(){
-		});
-    </script>
-</head>
-<body>
+			{% block mainalert %}
+			{% endblock %}
 
-	{{menu|raw}}
+			{% block content %}
+				<form id="register-product" name="register-product" method="post" >
 
-	<div class="row full-height split-page" style="padding:20px;">
-
-	<form id="register-product" name="register-product" method="post" >
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Nombre:
-					<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-12 columns">
-				<label>Descripción:
-					<textarea id="description" placeholder="Ingresa una descripción" name="description" ></textarea>
-				</label>
-			</div>
-		</div>
-
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-36columns">
-				<label>Precio Proveedor:
 					<div class="row medium-uncollapse large-collapse">
-						<div class="large-2 columns">
-							<div class="row collapse prefix-round">
-								<div class="small-3 columns">
-									<a href="#" class="button prefix">Q.</a>
-								</div>
-								<div class="small-9 columns">
-									<input type="text" placeholder="00" name="priceProvider" >
-								</div>
-							</div>
-						</div>
-
-						<div class="large-2 columns">
-							<div class="row collapse prefix-round">
-								<div class="small-3 columns">
-									<a href="#" class="button prefix">¢</a>
-								</div>
-								<div class="small-9 columns">
-									<input type="text" placeholder="00" name="priceProviderCent" >
-								</div>
-							</div>
-
+						<div class="large-12 columns">
+							<label>Nombre:
+								<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" />
+							</label>
 						</div>
 					</div>
-				</label>
-			</div>
-		</div>
 
-		<div class="row medium-uncollapse large-collapse">
-			<div class="large-36columns">
-				<label>Precio Cliente:
 					<div class="row medium-uncollapse large-collapse">
-						<div class="large-2 columns">
-							<div class="row collapse prefix-round">
-								<div class="small-3 columns">
-									<a href="#" class="button prefix">Q.</a>
-								</div>
-								<div class="small-9 columns">
-									<input type="text" placeholder="00" name="pricelient" >
-								</div>
-							</div>
-						</div>
-
-						<div class="large-2 columns">
-							<div class="row collapse prefix-round">
-								<div class="small-3 columns">
-									<a href="#" class="button prefix">¢</a>
-								</div>
-								<div class="small-9 columns">
-									<input type="text" placeholder="00" name="pricelientCent" >
-								</div>
-							</div>
-
+						<div class="large-12 columns">
+							<label>Descripción:
+								<textarea id="description" placeholder="Ingresa una descripción" name="description" ></textarea>
+							</label>
 						</div>
 					</div>
-				</label>
-			</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-36columns">
+							<label>Precio Proveedor:
+								<div class="row medium-uncollapse large-collapse">
+									<div class="large-2 columns">
+										<div class="row collapse prefix-round">
+											<div class="small-3 columns">
+												<a href="#" class="button prefix">Q.</a>
+											</div>
+											<div class="small-9 columns">
+												<input type="text" placeholder="00" name="priceProvider" >
+											</div>
+										</div>
+									</div>
+
+									<div class="large-2 columns">
+										<div class="row collapse prefix-round">
+											<div class="small-3 columns">
+												<a href="#" class="button prefix">¢</a>
+											</div>
+											<div class="small-9 columns">
+												<input type="text" placeholder="00" name="priceProviderCent" >
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</label>
+						</div>
+					</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<div class="large-36columns">
+							<label>Precio Cliente:
+								<div class="row medium-uncollapse large-collapse">
+									<div class="large-2 columns">
+										<div class="row collapse prefix-round">
+											<div class="small-3 columns">
+												<a href="#" class="button prefix">Q.</a>
+											</div>
+											<div class="small-9 columns">
+												<input type="text" placeholder="00" name="pricelient" >
+											</div>
+										</div>
+									</div>
+
+									<div class="large-2 columns">
+										<div class="row collapse prefix-round">
+											<div class="small-3 columns">
+												<a href="#" class="button prefix">¢</a>
+											</div>
+											<div class="small-9 columns">
+												<input type="text" placeholder="00" name="pricelientCent" >
+											</div>
+										</div>
+
+									</div>
+								</div>
+							</label>
+						</div>
+					</div>
+
+					<div class="row medium-uncollapse large-collapse">
+						<ul class="stack button-group">
+							<li><a href="#" class="button" onclick="registerProduct();" >Guardar</a></li>
+						</ul>		
+					</div>
+
+				</form>
+
+
+			{% endblock %}
+			<a class="exit-off-canvas"></a>
 		</div>
+	</div>
+{% endblock %}
 
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="registerProduct();" >Guardar</a></li>
-			</ul>		
-		</div>
-
-	</form>
-</div>
- 	<script src="{{ app.request.basepath }}/templates/home/js/function.js"></script>
-    <script src="{{ app.request.basepath }}/templates/home/js/vendor/fastclick.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/modernizr.js"></script>
-	<script src="{{ app.request.basepath }}/templates/home/js/vendor/jquery.cookie.js"></script>
-	
-
-	<script type="text/javascript" src="{{ app.request.basepath }}/templates/home/fancybox/jquery.fancybox.js"></script>
-
-
-</body>
-</html>	
-
-
+{% block mainjquery %}
+{% endblock %}

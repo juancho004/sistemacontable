@@ -96,27 +96,29 @@ public function validateSessionActive()
 
 	public function getMenu()
 	{
-
 		$menu ='
-			<nav class="top-bar foundation-bar" data-topbar>
-			  <ul class="title-area">
-			    <li class="name">
-			     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-small-only"><a href="#">Small screen</a></h1></span>
-			     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-medium-only"><a href="#">Medium Screen</a></h1></span>
-			     <span data-tooltip class="has-tip" title="Try resizing your browser to see how the grid stacks"><h1 class="show-for-large-only"><a href="#">Large screen</a></h1></span>
-			    </li>
-			  </ul>
-			  <section class="top-bar-section">
-			    <!-- Right Nav Section -->
-			    <ul class="right">
-			      <li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'productList')).'"  >Producto</a></li>
-			      <li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'providerList')).'" >Proveedor</a></li>
-			      <li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'stockList')).'" >Stock</a></li>
-			      <li class="active"><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'clientList')).'" >CLientes</a></li>
-			      <li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'sale')).'" >Ventas</a></li>
-			    </ul>
-			  </section>
-			</nav>';
+		<nav class="tab-bar">
+			<section class="left-small">
+				<a class="left-off-canvas-toggle menu-icon" aria-expanded="false"><span></span></a>
+			</section>
+
+			<section class="middle tab-bar-section">
+				<h1 class="title">Sistema Contable</h1>
+			</section>
+		</nav>
+		<aside class="left-off-canvas-menu">
+			<ul class="off-canvas-list">
+				<li><label>Clientes</label></li>
+				<li class="active"><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'clientList')).'" >Clientes</a></li>
+				<li class="active"><a  href="#" onclick="newStock()" >Nuevos Clientes</a></li>
+				<li><label>Productos</label></li>
+				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'productList')).'"  >Producto</a></li>
+				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'providerList')).'" >Proveedor</a></li>
+				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'stockList')).'" >Stock</a></li>
+				<li><label>Ventas</label></li>
+				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'sale')).'" >Ventas</a></li>
+			</ul>
+		</aside>';
 
 		return $menu;
 	}

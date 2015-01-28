@@ -1,49 +1,38 @@
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="{{ app.source }}home/js/vendor/jquery.js"></script>
-    <script src="{{ app.source }}home/js/foundation.min.js"></script>
-    <link rel="stylesheet" href="{{ app.source }}home/css/foundation.css" />
-    <link rel="stylesheet" href="{{ app.source }}home/css/style.css" />
-	<link href="{{ app.source }}home/fancybox/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+{% extends "layout.twig" %}
 
-    <script type="text/javascript">
-    var basepath = "{{ app.request.basepath }}";
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+			{% block mainmenu %}
+				{{menu|raw}}
+			{% endblock %}
 
-		$(document).ready(function(){
-		});
-    </script>
-</head>
-<body>
+			{% block mainalert %}
+				<div id="mainAlert1" data-alert class="alert-box" tabindex="0" aria-live="assertive" role="dialogalert">
+					<span>Mensaje de alerta</span>
+					<button href="#" tabindex="0" class="close" aria-label="Close Alert">&times;</button>
+				</div>
+			{% endblock %}
 
-	{{menu|raw}}
+			{% block content %}
+				<div id="main-tab">
+					<form id="update-stock" name="update-stock" method="post" >
+						{{table|raw}}
+					</form>
+				</div>
 
-	<div class="row full-height split-page" style="padding:20px;">
-		<div id="main-tab">
-			<form id="update-stock" name="update-stock" method="post" >
-				{{table|raw}}
-			</form>
+				<div class="row medium-uncollapse large-collapse">
+					<ul class="stack button-group">
+						<li><a href="#" class="button" onclick="crudStock('{{id|raw}}','update');" >Guardar</a></li>
+					</ul>
+				</div>
+			{% endblock %}
+			<a class="exit-off-canvas"></a>
 		</div>
+	</div>
+{% endblock %}
 
-
-
-
-		<div class="row medium-uncollapse large-collapse">
-			<ul class="stack button-group">
-				<li><a href="#" class="button" onclick="crudStock('{{id|raw}}','update');" >Guardar</a></li>
-			</ul>		
-		</div>
-</div>
- 	<script src="{{ app.source }}home/js/function.js"></script>
-    <script src="{{ app.source }}home/js/vendor/fastclick.js"></script>
-	<script src="{{ app.source }}home/js/vendor/modernizr.js"></script>
-	<script src="{{ app.source }}home/js/vendor/jquery.cookie.js"></script>
-	<script src="{{ app.source }}home/fancybox/jquery.fancybox.js"></script>
-
-	
-
-
-</body>
-</html>	
+{% block mainjquery %}
+{% endblock %}
 
 
