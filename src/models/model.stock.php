@@ -104,14 +104,29 @@ class ModelStock {
 			break;
 
 			case 'delete':
-			$id = (int)$params;
+				$id = (int)$params;
 				return $this->delete("DELETE FROM {$table} WHERE id = {$id}");
+			break;
+
+			case 'exist':
+				return $this->existInStock($params[0],$params[1]);
 			break;
 		}
 
 		return $response;
 
 	}
+
+	public function existInStock($id,$total)
+	{
+		$response 	= new stdClass();
+		$query 		= "SELECT totalStock FROM {$this->tabStock} WHERE id = {$id} ";
+		$exist 		= $this->app['dbs']['mysql_silex']->fetchAssoc($query);
+		$response->status 	= ( $exist['totalStock'] > $total )? TRUE:FALSE;
+		$response->message 	= (!$response->status)?"No existe stock suficiente para completar la venta":"Ok";
+		return $response;
+	}
+
 
 	public function validateExistRegister($provider,$product,$table)
 	{
@@ -293,7 +308,7 @@ class ModelStock {
 		}
 	}
 
-	public function getStock()
+	public function getStock($row)
 	{
 		$query = "SELECT s.id, pt.name as product 
 				FROM {$this->tabStock} s 
@@ -304,7 +319,7 @@ class ModelStock {
 
 		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
-		$select = "<select class='select_product' name='select_product[]' >";
+		$select = "<select id='select-item-".$row."' class='select_product' name='select_product[]' >";
 		$select.='<option value="">Selecciona un producto</option>';
 
 		foreach ($list as $key => $value) {

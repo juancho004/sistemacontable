@@ -19,7 +19,7 @@ $app->match('/registersale', function () use ( $app, $sale, $client ) {
 
 $app->match('/itemSale', function () use ( $app, $sale ) {
 
-	$item = array("item" => $sale->productSale(true) );
+	$item = array("item" => $sale->productSale(true,$_POST['number']) );
 	return $app->json($item);
 
 })->method('GET|POST');

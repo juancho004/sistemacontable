@@ -3,14 +3,7 @@
 {% block maincontent %}
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
-			{% block mainmenu %}
 				{{menu|raw}}
-			{% endblock %}
-
-			{% block mainalert %}
-			{% endblock %}
-
-			{% block content %}
 				<div class="new-item-sale btn-new-item" onclick="newItemSale()">Nuevo</div>
 				<form id="register-sale" name="register-sale" method="post" action="./registersale">
 
@@ -34,8 +27,6 @@
 					</div>
 
 				</form>
-
-			{% endblock %}
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>
@@ -49,7 +40,11 @@
 
 	$( "#register-sale" ).delegate( ".select_product", "change", function() {
 		var id = $(this).val();
-		var block = $(this).parent().html();
+		var idBlock = $(this).attr('id');
+		var idBlock = idBlock.split('select-item-');
+		$('#input-item-'+idBlock[1]).attr('onChange','validateInStock(this.id,'+id+')');
+		$('#input-item-'+idBlock[1]).val(' ');
+		$('#input-item-'+idBlock[1]).removeAttr('disabled');
 	});
 
 {% endblock %}

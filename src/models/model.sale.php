@@ -19,7 +19,7 @@ class ModelSale {
 		$this->stock 	= new ModelStock($app,$prefix);
 	}
 
-	public function productSale($option = false )
+	public function productSale($option = false,$row=0 )
 	{
 		$drop = '';
 		if($option){
@@ -31,7 +31,7 @@ class ModelSale {
 		'.$drop.'
 			<div class="large-5 columns">
 				<label>Producto:
-					'.$this->stock->getStock().'
+					'.$this->stock->getStock($row).'
 				</label>
 			</div>
 			
@@ -41,7 +41,7 @@ class ModelSale {
 			
 			<div class="large-5 columns">
 				<label>Cantidad:
-					<input class="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock[]" />
+					<input id="input-item-'.$row.'" class="totalStock" type="text" placeholder="Ingresa nombre de producto" name="totalStock[]" />
 				</label>
 			</div>
 
@@ -61,6 +61,8 @@ class ModelSale {
 		for ($i=0; $i < count($listProduct); $i++) { 
 			$listSale[] = array("item" => $listProduct[$i], "total" => $listTotalItem[$i] );
 		}
+
+		_pre($listSale);exit;
 
 		$this->stock->discountStock();
 

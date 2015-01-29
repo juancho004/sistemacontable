@@ -1,10 +1,15 @@
+var addItem = 0;
 function newItemSale()
 {
+	addItem++;
 
 	jQuery.ajax({
 		url: basepath+'/index.php/itemSale',
 		type: 'POST',
 		async: true,
+		data: {
+			number:addItem
+		},
 		dataType: 'json',
 		beforeSend: function(xhr){
 			$.fancybox.showLoading();
@@ -16,7 +21,34 @@ function newItemSale()
 			jQuery.fancybox.hideLoading();
 		}
 	});
+}
 
+function validateInStock(idInput,id)
+{	
+
+	var total = $("#"+idInput).val();
+	jQuery.ajax({
+		url: basepath+'/index.php/crud/stock/exist',
+		type: 'POST',
+		async: true,
+		data: {
+			params:[id, total ]
+		},
+		dataType: 'json',
+		beforeSend: function(xhr){
+			$.fancybox.showLoading();
+		},
+		success: function(json){
+			if(!json.status){
+				$.fancybox(json.message);
+				$("#"+idInput).attr('disabled','disabled');
+				$("#"+idInput).val(' ');
+			}
+		},	
+		complete: function(xhr, textStatus){
+			jQuery.fancybox.hideLoading();
+		}
+	});	
 }
 
 function sale()
