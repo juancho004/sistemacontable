@@ -320,7 +320,7 @@ class ModelStock {
 		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
 		$select = "<select id='select-item-".$row."' class='select_product' name='select_product[]' >";
-		$select.='<option value="">Selecciona un producto</option>';
+		$select.='<option value="0">Selecciona un producto</option>';
 
 		foreach ($list as $key => $value) {
 				$select.='<option value="'.$value['id'].'">'.$value['product'].'</option>';
@@ -333,35 +333,11 @@ class ModelStock {
 	public function discountStock($listSale)
 	{
 		foreach ($listSale as $key => $value) {
-			
-			#validar si existe stock suficiente
-			$query = "SELECT id FROM {$this->tabStock} WHERE id = {$value['item']} AND totalStock > {$value['total']} ";
-			$exist = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
-			$total = ( count($exist['id']) > 0 )? TRUE:FALSE;
-
-			#validar si el minimo en stock es valido
-			if( $total ){
-				$query = "SELECT id FROM {$this->tabStock} WHERE id = {$value['item']} AND totalStock > minStock ";
-				$exist = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
-				$min = ( count($exist['id']) > 0 )? TRUE:FALSE;
-				
-				
-					#descontar del total de stock
-					$query 	= "UPDATE {$this->tabStock} SET  totalStock =  (totalStock - {$value['total']}) WHERE  id = {$value['item']} ";
-					$update = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
-					if(!$update){
-						return 'A ocurrido un error al momento de actualizar el stock, por favor validar con el administrador.';
-					}
-					if( $min ){
-						return 'Se ha consumido el minimo de productos, por favor contacatar al proveedor.';
-					}
-
-			}else{
-				return 'Ya no hay productos en Stock suficientes.';
-			}
-
-			
+			#descontar del total de stock
+			$query 	= "UPDATE {$this->tabStock} SET  totalStock =  (totalStock - {$value['total']}) WHERE  id = {$value['item']} ";
+			$update = $this->app['dbs']['mysql_silex']->executeQuery($query);
 		}
+		return true;
 	}
 
 }

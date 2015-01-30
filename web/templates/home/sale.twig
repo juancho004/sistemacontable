@@ -4,8 +4,9 @@
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
 				{{menu|raw}}
+			<div class="row full-height split-page" style="padding:20px;">
 				<div class="new-item-sale btn-new-item" onclick="newItemSale()">Nuevo</div>
-				<form id="register-sale" name="register-sale" method="post" action="./registersale">
+				<form id="register-sale" name="register-sale" method="post" action="./registersale" onsubmit="return saveSale()">
 
 					<div class="row medium-uncollapse large-collapse">
 						<div class="large-12 columns">
@@ -27,6 +28,7 @@
 					</div>
 
 				</form>
+			</div>
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>

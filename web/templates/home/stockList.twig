@@ -3,18 +3,11 @@
 {% block maincontent %}
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
-			{% block mainmenu %}
 				{{menu|raw}}
-			{% endblock %}
-
-			{% block mainalert %}
 				<div id="mainAlert1" data-alert class="alert-box" tabindex="0" aria-live="assertive" role="dialogalert">
 					<span>Mensaje de alerta</span>
 					<button href="#" tabindex="0" class="close" aria-label="Close Alert">&times;</button>
 				</div>
-			{% endblock %}
-
-			{% block content %}
 				
 				<div class="row full-height split-page" style="padding:20px;">
 					<div class="new-provider btn-new-item" onclick="newStock()">Nuevo</div>
@@ -35,7 +28,6 @@
 						</table>
 					</div>
 				</div>
-			{% endblock %}
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>

@@ -6,15 +6,15 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
-$app->match('/registersale', function () use ( $app, $sale, $client ) {
+$app->match('/registersale', function () use ( $app, $sale, $client, $master ) {
+
+	#_pre(empty($_POST['select_client']),true );
+	#_pre(empty(),true );
+	#_pre(empty($_POST['totalStock']),true );
 
 	$sale->registerSale($_POST);
-	$template 	= 'sale.twig';
-	$array 		= array( "client" => $client->getClient(), "productSale" => $sale->productSale() );
-		return new Response(
-		$app['twig']->render( $template, $array )
-	);
-
+	return $app->redirect('./sale' );
+	
 })->method('GET|POST');
 
 $app->match('/itemSale', function () use ( $app, $sale ) {

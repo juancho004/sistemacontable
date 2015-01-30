@@ -27,6 +27,8 @@ function validateInStock(idInput,id)
 {	
 
 	var total = $("#"+idInput).val();
+	var idProduct = idInput.split('input-item-');
+
 	jQuery.ajax({
 		url: basepath+'/index.php/crud/stock/exist',
 		type: 'POST',
@@ -42,6 +44,7 @@ function validateInStock(idInput,id)
 			if(!json.status){
 				$.fancybox(json.message);
 				$("#"+idInput).attr('disabled','disabled');
+				$("#select-item-"+idProduct[1]+" option[value=0]").prop("selected", true);
 				$("#"+idInput).val(' ');
 			}
 		},	
@@ -51,8 +54,24 @@ function validateInStock(idInput,id)
 	});	
 }
 
-function sale()
+function saveSale()
 {
+
+	var client 	= $( "select#select_client option:selected").val();
+	var product = $( "select.select_product option:selected").val();
+	var lista 	= $('select.select_product option:selected').toArray();
+
+	$.each( lista, function( key, value ) {
+		alert( key + ": " + value );
+	});
+
+	if(client==0)
+	{
+		$.fancybox('Selecciona un cliente');
+		return false;	
+	}
+
+	return false;
 
 	/*jQuery.ajax({
 		url: basepath+'/index.php/registersale',

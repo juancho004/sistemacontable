@@ -292,7 +292,7 @@ class ModelClient {
 		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
 		$select = "<select id='select_client' name='select_client' >";
-		$select.='<option value="">Selecciona un cliente</option>';
+		$select.='<option value="0">Selecciona un cliente</option>';
 
 		foreach ($list as $key => $value) {
 				$select.='<option value="'.$value['id'].'">'.$value['name'].'</option>';

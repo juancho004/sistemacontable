@@ -3,14 +3,8 @@
 {% block maincontent %}
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
-			{% block mainmenu %}
 				{{menu|raw}}
-			{% endblock %}
-
-			{% block mainalert %}
-			{% endblock %}
-
-			{% block content %}
+			<div class="row full-height split-page" style="padding:20px;">
 				<div class="new-producto btn-new-item" onclick="newProducto()">Nuevo</div>
 				<div id="main-tab">
 					<table>
@@ -28,7 +22,7 @@
 						</tbody>
 					</table>
 				</div>
-			{% endblock %}
+			</div>
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>
