@@ -117,6 +117,8 @@ public function validateSessionActive()
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'stockList')).'" >Stock</a></li>
 				<li><label>Ventas</label></li>
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'sale')).'" >Ventas</a></li>
+				<li><label>Recibos de ventas</label></li>
+				<li><a  href="'.$this->app['url_generator']->generate('bill', array('id' => '40')).'" >Recibos</a></li>
 			</ul>
 		</aside>';
 

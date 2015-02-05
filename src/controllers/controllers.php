@@ -5,15 +5,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/*
+$template 	= 'sale.twig';
+	$array 		= array( "client" => $client->getClient(), "productSale" => $sale->productSale(),"menu" => $master->getMenu(), "message" => $response->message );
+message
+	return new Response(
+		$app['twig']->render( $template, $array )
+	);
+*/
+
 
 $app->match('/registersale', function () use ( $app, $sale, $client, $master ) {
 
-	#_pre(empty($_POST['select_client']),true );
-	#_pre(empty(),true );
-	#_pre(empty($_POST['totalStock']),true );
-
-	$sale->registerSale($_POST);
-	return $app->redirect('./sale' );
+	$response = $sale->registerSale($_POST);
+	#_pre($response);exit;
+	return $app->redirect('./bill/'.$response->idSale );
 	
 })->method('GET|POST');
 
@@ -23,6 +29,16 @@ $app->match('/itemSale', function () use ( $app, $sale ) {
 	return $app->json($item);
 
 })->method('GET|POST');
+
+$app->match('/bill/{id}', function ($id) use ( $app, $stock, $master ) {
+
+	$template 	= 'bill.twig';
+	$array 		= array( "table" => $stock->getBill($id),"menu" => $master->getMenu() );
+	return new Response(
+		$app['twig']->render( $template, $array )
+	);
+
+})->method('GET|POST')->value("id",false)->bind('bill');;
 
 
 $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock, $client, $sale, $master ) {

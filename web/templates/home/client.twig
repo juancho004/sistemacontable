@@ -3,14 +3,7 @@
 {% block maincontent %}
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
-			{% block mainmenu %}
 				{{menu|raw}}
-			{% endblock %}
-
-			{% block mainalert %}
-			{% endblock %}
-
-			{% block content %}
 				<form id="register-client" name="register-client" method="post" >
 
 					<div class="row medium-uncollapse large-collapse">
@@ -59,7 +52,6 @@
 						</ul>		
 					</div>
 				</form>
-			{% endblock %}
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>

@@ -340,5 +340,72 @@ class ModelStock {
 		return true;
 	}
 
+	public function getBill($id)
+	{
+
+		$query = "SELECT DISTINCT(c.name), c.lastName, c.nit, s.registerDate
+					FROM fc_bill as b
+					INNER JOIN fc_sale as s
+					ON s.id = b.id_sale
+					INNER JOIN fc_stock as sk
+					ON sk.id = b.id_stock
+					INNER JOIN fc_product as p
+					ON p.id = sk.id_product
+					INNER JOIN fc_client as c
+					ON c.id = s.id_client
+					WHERE b.id_sale = {$id}";
+
+		$client = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+		$table = '<center><table role="grid" width="80%"><caption>RECIBO DE COMPRA</caption>';
+
+		
+		foreach ($client as $key => $value) {
+
+			$table.= '<tr>';
+			$table.= '<th>Fecha Registro: '.$value['registerDate'].'</th>';
+			$table.= '</tr>';
+
+			$table.= '<tr>';
+			$table.= '<th>Cliente: '.$value['name'].' '.$value['lastName'].'</th>';
+			$table.= '<th>NIT: '.$value['nit'].'</th>';
+			$table.= '</tr>';
+		}
+		
+
+		#query regisgtro de facturación
+		$query = "SELECT p.name, b.totalProduct 
+					FROM fc_bill as b
+					INNER JOIN fc_sale as s
+					ON s.id = b.id_sale
+					INNER JOIN fc_stock as sk
+					ON sk.id = b.id_stock
+					INNER JOIN fc_product as p
+					ON p.id = sk.id_product
+					WHERE b.id_sale = {$id}";
+
+		$bill = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+
+		$table.= '<tr>';
+		$table.= '<th><center>Producto</center></th>';
+		$table.= '<th><center>Cantidad</center></th>';
+		$table.= '</tr>';
+
+		
+		foreach ($bill as $key => $value) {
+			$table.= '<tr>';
+			$table.= '<td><center>'.$value['name'].'</center></td>';
+			$table.= '<td><center>'.$value['totalProduct'].'</center></td>';
+			$table.= '</tr>';
+		}
+		
+		$table.= '</table></center>';
+
+		return $table;
+
+
+	}
+
 }
 ?>

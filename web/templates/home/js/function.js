@@ -57,21 +57,38 @@ function validateInStock(idInput,id)
 function saveSale()
 {
 
-	var client 	= $( "select#select_client option:selected").val();
-	var product = $( "select.select_product option:selected").val();
-	var lista 	= $('select.select_product option:selected').toArray();
-
-	$.each( lista, function( key, value ) {
-		alert( key + ": " + value );
-	});
+	var client 		= $( "select#select_client option:selected").val();
+	var product 	= $( "select.select_product option:selected").val();
+	var listaSelect = $('select.select_product option:selected').toArray();
+	var listaValue 	= $('input.totalStock').toArray();
+	var status = true;
 
 	if(client==0)
 	{
 		$.fancybox('Selecciona un cliente');
-		return false;	
+		status = false;	
 	}
 
-	return false;
+	$.each( listaSelect, function( key, value ) {
+		//console.log( key + ": " + value.value );
+		if( value.value == 0){
+			$.fancybox('Selecciona o elimina un bloque de producto.');
+			status = false;
+		}
+	});
+
+	$.each( listaValue, function( key, value ) {
+		//console.log( key + ": " + value.value );
+		if( value.value == " " || value.value == 0  ){
+			$.fancybox('Tienes que ingresar un monton mayor a 0.');
+			status = false;
+		}
+
+	});
+
+	
+
+	return status;
 
 	/*jQuery.ajax({
 		url: basepath+'/index.php/registersale',

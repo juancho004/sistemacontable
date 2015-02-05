@@ -52,6 +52,7 @@ class ModelSale {
 	public function registerSale($params)
 	{
 		$listSale		= array();
+		$response	 	= new stdClass();
 		$client 		= $params['select_client'];
 		$listProduct 	= $params['select_product'];
 		$listTotalItem 	= $params['totalStock'];
@@ -65,22 +66,52 @@ class ModelSale {
 		$this->stock->discountStock($listSale);
 
 		$query = "INSERT INTO fc_sale (registerDate, billNumber, id_user, id_client) VALUES ('".$registerDate."', '".$correlative."', '1', ".$client.") ";
-		$this->app['dbs']['mysql_silex']->executeQuery($query);
+		$resp = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
 		$id_sale = $this->app['db']->lastInsertId('id');
+		$response->idSale 	= $id_sale;
 
+		if( !(boolean)$id_sale ){
+			$response->status 	= $resp;
+			$response->message 	= (!$resp)? "Ocurrio un error, cominicate con el administrador":"Ok";
+			return $response;
+		}
+
+		$arrayError = array();
 
 		foreach ($listSale as $key => $value) {
 			$query = "INSERT INTO fc_bill (totalProduct, id_sale, id_stock) VALUES (".$value['total'].", ".$id_sale.", ".$value['item'].") ";
-			$this->app['dbs']['mysql_silex']->executeQuery($query);
+			$return = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
+			if( $return ){
+				$arrayError[] = array( "id" =>  $value['item'] , "total" => $value['total'] , "status" => false );
+			}
 		}
 
-		#_pre($correlative);
-		#exit;
+		if( count($arrayError) >= 1 )
+		{
+			#fc_sale_error_log
+			foreach ($arrayError as $key => $value) {
+
+				$description = json_encode( array("idProduct" => $value['id'], "total" => $value['total'] ) );
+				$dateRegisgter = date("Y-m-d H:i:s");
+				$query = "INSERT INTO fc_sale_error_log (error, description, registerDate) VALUES ('Error register in stock', '{$description}', '{$dateRegisgter}' ) ";
+				$this->app['dbs']['mysql_silex']->executeQuery($query);
+			}
+			
+			$response->status 	= false;
+			$response->message 	= "No se pudieron registar algunos productos.";
+			
+		}else{
+			$response->status 	= true;
+			$response->message 	= "ok";
+		}
+			return $response;
+
 	}
 
 
 	public function update($query)
 	{
+		$response = new stdClass();
 		$resp = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
 		$response->status 	= $resp;
 		$response->reloadPage	= true;
