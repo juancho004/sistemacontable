@@ -5,14 +5,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/*
-$template 	= 'sale.twig';
-	$array 		= array( "client" => $client->getClient(), "productSale" => $sale->productSale(),"menu" => $master->getMenu(), "message" => $response->message );
-message
-	return new Response(
-		$app['twig']->render( $template, $array )
-	);
-*/
+$app->match('/login', function () use ( $app, $master ) {
+
+	$isActive = $master->validateSessionActive();
+	if( !$isActive->redirect ){
+		$template 	= 'login.twig';
+		$array 		= array( );
+		return new Response(
+			$app['twig']->render( $template, $array )
+		);
+	}
+
+	return $app->redirect('./sale' );
+	
+})->method('GET|POST');
 
 
 $app->match('/registersale', function () use ( $app, $sale, $client, $master ) {
@@ -42,6 +48,15 @@ $app->match('/bill/{id}', function ($id) use ( $app, $stock, $master ) {
 
 
 $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock, $client, $sale, $master ) {
+
+	$isActive = $master->validateSessionActive();
+	if( !$isActive->redirect ){
+		$template 	= 'login.twig';
+		$array 		= array( );
+		return new Response(
+			$app['twig']->render( $template, $array )
+		);
+	}
 
 	$array = array();
 	$template ="";
@@ -129,9 +144,7 @@ $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider
 
 })->method('GET|POST')->value("view","productList")->value("id",false)->bind('view');
 
-
-
-$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider, $stock, $client ) {
+$app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$product, $provider, $stock, $client, $master ) {
 
 	switch ($model) {
 		case 'product':
@@ -149,9 +162,15 @@ $app->match('/crud/{model}/{action}', function ($model,$action) use ( $app ,$pro
 		case 'client':
 			return $app->json($client->crudClient($action,$_POST['params']));
 		break;
+
+		case 'login':
+			return $app->json($master->validateSession( $_POST['params'][0],$_POST['params'][1] ));
+		break;
+
 	}
 
 })->method('GET|POST')->value("action",false)->value("model",false);
+
 
 
 

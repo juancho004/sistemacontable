@@ -1,30 +1,61 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" >
-    <head>
-        <title>{{ TITLE_PAGE }}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="../templates/home/css/mainlogin.css" rel="stylesheet" type="text/css" />
-        <link href="../templates/home/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
-        <style>
-            body { background-color: #F5F5F5; padding-bottom: 40px; padding-top: 40px; }
-        </style>
+{% extends "layout.twig" %}
 
-    </head>
-    <body id="bodyappfb" >
-        <div class="container">
-                    
-            <form id="login-form" class="form-signin" action="./login" method="post">
+{% block maincontent %}
+    <div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+
+<dl class="sub-nav">
+    <dt>Stock Bajo:</dt>
+    <dd class="active"><a href="#">1</a></dd>
+</dl>
+        <div class="inner-wrap">
+            <div class="row full-height split-page" style="padding:20px;">
                 <h2 class="form-signin-heading">Por favor, inicie sesión</h2>
-                <input type="text" id="inputUser" placeholder="User"  name="user" class="input-block-level" >
-                <input type="password" id="inputPassword" placeholder="Password" name="password" class="input-block-level" >
-                <button type="submit" class="btn btn-large btn-primary" >Iniciar sesión <i class="icon-chevron-right icon-white"></i></button>
-            </form>
-
-       </div>
-
-        <script src="../templates/home/js/jQuery-1.10.1.js"></script>
-
+                <input type="text" id="username" placeholder="User"  name="username" >
+                <input type="password" id="userpass" placeholder="Password" name="userpass" >
+                <button type="submit" class="btn-login" >Iniciar sesión</button>
+            </div>
+            <a class="exit-off-canvas"></a>
+        </div>
+    </div>
 
 
-    </body>
-</html>
+
+
+
+{% endblock %}
+
+{% block mainjquery %}
+$(document).ready(function(){
+
+
+    $(".btn-login").click(function(e){
+        var username = $("#username").val();
+        var userpass = $("#userpass").val();
+
+        jQuery.ajax({
+            url: basepath+'/index.php/crud/login/init',
+            type: 'POST',
+            async: true,
+            data: {
+                params:[username, userpass ]
+            },
+            dataType: 'json',
+            beforeSend: function(xhr){
+                $.fancybox.showLoading();
+            },
+            success: function(json){
+                if( !json.status){
+                    modal_sms(json.message);
+                    return false;
+                }
+                    top.location=basepath+'/index.php/sale';
+            },  
+            complete: function(xhr, textStatus){
+                jQuery.fancybox.hideLoading();
+            }
+        });
+
+    });
+
+});
+{% endblock %}

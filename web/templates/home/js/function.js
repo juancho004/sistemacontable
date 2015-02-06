@@ -42,7 +42,7 @@ function validateInStock(idInput,id)
 		},
 		success: function(json){
 			if(!json.status){
-				$.fancybox(json.message);
+				modal_sms(json.message);
 				$("#"+idInput).attr('disabled','disabled');
 				$("#select-item-"+idProduct[1]+" option[value=0]").prop("selected", true);
 				$("#"+idInput).val(' ');
@@ -89,27 +89,6 @@ function saveSale()
 	
 
 	return status;
-
-	/*jQuery.ajax({
-		url: basepath+'/index.php/registersale',
-		type: 'POST',
-		async: true,
-		data: {
-			params: $("#register-sale").serialize()
-		},
-		dataType: 'json',
-		beforeSend: function(xhr){
-			$.fancybox.showLoading();
-		},
-		success: function(json){
-			$(".item-sale").append(json.item);
-		},	
-		complete: function(xhr, textStatus){
-			jQuery.fancybox.hideLoading();
-		}
-	});
-	*/
-
 }
 
 
@@ -132,12 +111,12 @@ function registerProduct()
 			$( "textarea" ).removeClass( "error-alert" );
 			
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 				$.each( json.empty, function( key, value ) {
 					$("#"+value).addClass('error-alert');
 				});
 			}else{
-				$.fancybox( '<span>'+json.message+'</span>' );				
+				modal_sms( '<span>'+json.message+'</span>' );				
 				top.location=basepath;
 			}
 		},	
@@ -166,12 +145,12 @@ function registerProvider()
 			$( "textarea" ).removeClass( "error-alert" );
 			
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 				$.each( json.empty, function( key, value ) {
 					$("#"+value).addClass('error-alert');
 				});
 			}else{
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 				top.location=basepath+"/index.php/providerList";
 
 			}
@@ -212,7 +191,7 @@ function crudClient(id,action)
 		success: function(json){
 
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 				$.each( json.empty, function( key, value ) {
 					$("#"+value).addClass('error-alert');
 				});
@@ -227,7 +206,7 @@ function crudClient(id,action)
 				}else{
 
 					$("#main-tab").html(json.content);
-					$.fancybox( '<span>'+json.message+'</span>' );
+					modal_sms( '<span>'+json.message+'</span>' );
 					top.location=basepath+"/index.php/clientList";
 				}
 
@@ -240,6 +219,13 @@ function crudClient(id,action)
 	});
 
 	return false;
+}
+
+function modal_sms(sms)
+{
+ 	$('body').append('<div id="added2cart" class="reveal-modal small" data-reveal><center><h5>'+ sms +'</h5></center><a class="close-reveal-modal">&#215;</a></div>');
+    //Open the reveal modal
+    $('#added2cart').foundation('reveal', 'open');
 }
 
 
@@ -273,7 +259,7 @@ function crudStock(id,action)
 		success: function(json){
 
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 				$.each( json.empty, function( key, value ) {
 					$("#"+value).addClass('error-alert');
 				});
@@ -288,7 +274,7 @@ function crudStock(id,action)
 				}else{
 
 					$("#main-tab").html(json.content);
-					$.fancybox( '<span>'+json.message+'</span>' );
+					modal_sms( '<span>'+json.message+'</span>' );
 					top.location=basepath+"/index.php/stockList";
 				}
 
@@ -358,7 +344,7 @@ function crudProduct(id,action)
 		success: function(json){
 
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 			}else{
 
 				if(json.reloadPage == true ){
@@ -368,7 +354,7 @@ function crudProduct(id,action)
 					});
 				}else{
 					$("#main-tab").html(json.content);
-					$.fancybox( '<span>'+json.message+'</span>' );
+					modal_sms( '<span>'+json.message+'</span>' );
 				}
 
 
@@ -410,7 +396,7 @@ function crudProvider(id,action)
 		success: function(json){
 
 			if ( !json.status ){
-				$.fancybox( '<span>'+json.message+'</span>' );
+				modal_sms( '<span>'+json.message+'</span>' );
 			}else{
 
 				if(json.reloadPage == true ){
@@ -420,7 +406,7 @@ function crudProvider(id,action)
 					});
 				}else{
 					$("#main-tab").html(json.content);
-					$.fancybox( '<span>'+json.message+'</span>' );
+					modal_sms( '<span>'+json.message+'</span>' );
 				}
 
 

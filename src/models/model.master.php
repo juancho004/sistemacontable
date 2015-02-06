@@ -28,26 +28,37 @@ class ModelMaster {
 
 	public function validateSession($user,$password)
 	{
-		$password 	= md5($password);	
-		$table 		= "{$this->prefix}user_admin";
-		$query 		= 'SELECT * FROM '.$table.' WHERE user = "'.$user.'" AND password = "'.$password.'" ';
-		$user  		= $this->app['dbs']['mysql_silex']->fetchAssoc($query);
-
-		if( !empty($user['id']) ):
-			#inicia sesión
-			@session_name("login_usuario");
-			@session_start();
-
-			#registrar inicio de sesion
-			$_SESSION["authenticated_user"]	= TRUE; #asignar que el usuario se autentico
-			$_SESSION["lastaccess_user"]	= date("Y-n-j H:i:s"); #definir la fecha y hora de inicio de sesión en formato aaaa-mm-dd hh:mm:ss
-
-			return TRUE;
-
-		endif;
+		$response 	= new stdClass();
+		#$password 	= md5($password);	
+		$table 		= "{$this->prefix}acl_user";
+		try{
+			$query 		= 'SELECT id FROM '.$table.' WHERE userName = "'.$user.'" AND password = "'.$password.'" ';
+			$user  		= $this->app['dbs']['mysql_silex']->fetchAssoc($query);
 	
-		return FALSE;
+			if( !empty($user['id']) ):
+				#inicia sesión
+				@session_name("login_usuario");
+				@session_start();
 
+				#registrar inicio de sesion
+				$_SESSION["authenticated_user"]	= true; #asignar que el usuario se autentico
+				$_SESSION["lastaccess_user"]	= date("Y-n-j H:i:s"); #definir la fecha y hora de inicio de sesión en formato aaaa-mm-dd hh:mm:ss
+
+				$response->status = true;
+				$response->message 	= "Ok";
+				return $response;
+
+			endif;
+
+			$response->status = false;
+			$response->message 	= "El usuario o contraseña no son validos.";
+			return $response;
+
+		}catch(Exception $e){
+			$response->status = false;
+			$response->message 	= "Ocurrio un error";
+			return $response;
+		}
 	}
 
 public function validateSessionActive()
@@ -65,7 +76,6 @@ public function validateSessionActive()
 
 			#el usuario NO inicio sesion
 			$response->redirect = FALSE;
-			$response->url 		= 'index.php/login';
 
 		} else {
 			#el usuario inicio sesion
@@ -79,7 +89,6 @@ public function validateSessionActive()
 				#si el tiempo es mayo del indicado como tiempo de vida de la session
 				session_destroy(); #destruir la sesión y se redirecciona a lagin
 				$response->redirect = FALSE;
-				$response->url 		= 'index.php/login';
 				#sino, se actualiza la fecha de la session
 
 			}else {
@@ -87,8 +96,6 @@ public function validateSessionActive()
 				#actualizar tiempo de session
 				$_SESSION["lastaccess_user"] = $ahora;
 				$response->redirect 	= TRUE;
-				$response->url 			= 'index.php/home';
-
 			}
 		}
 		return $response;
@@ -96,6 +103,30 @@ public function validateSessionActive()
 
 	public function getMenu()
 	{
+		
+		$minStock = $this->getMinStock();
+
+		if(count($minStock) > 0 ){
+			$alertStock = '<script type="text/javascript">
+								$(document).ready(function(){
+									modal_sms("<center><h5>Existen '.count($minStock).' producto(s) con stock bajo</h5></center>");
+								});
+							</script>
+							<section class="middle tab-bar-section">
+							<dl class="sub-nav">
+							<dt>Productos con stock Bajos</dt>
+							<dd class="active"><a href="#">'.count($minStock).'</a></dd>
+							</dl>
+							</section>';
+		}else{
+			$alertStock = '<section class="middle tab-bar-section">
+							<dl class="sub-nav">
+							<dt>Productos con stock Bajos</dt>
+							<dd class="active"><a href="#">0</a></dd>
+							</dl>
+							</section>';
+		}
+
 		$menu ='
 		<nav class="tab-bar">
 			<section class="left-small">
@@ -105,6 +136,7 @@ public function validateSessionActive()
 			<section class="middle tab-bar-section">
 				<h1 class="title">Sistema Contable</h1>
 			</section>
+			'.$alertStock.'
 		</nav>
 		<aside class="left-off-canvas-menu">
 			<ul class="off-canvas-list">
@@ -123,6 +155,23 @@ public function validateSessionActive()
 		</aside>';
 
 		return $menu;
+	}
+
+	public function getMinStock(){
+
+		try{
+		$query = "SELECT p.name, s.totalStock,s.minStock
+					FROM fc_stock as s
+					INNER JOIN fc_product as p
+					ON p.id = s.id_product
+					WHERE s.minStock >= s.totalStock";
+		$min  		= $this->app['dbs']['mysql_silex']->fetchAll($query);
+		return $min;
+	}catch(Exception $e){
+		return '';
+	}
+
+		
 	}
 
 }
