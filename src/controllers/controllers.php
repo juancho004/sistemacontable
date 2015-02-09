@@ -5,6 +5,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+$app->match('/error', function () use ( $app) {
+	$template 	= 'error.twig';
+	$array 		= array( );
+	return new Response(
+		$app['twig']->render( $template, $array )
+	);
+
+})->method('GET|POST')->bind('error');
+
 $app->match('/login', function () use ( $app, $master ) {
 
 	$isActive = $master->validateSessionActive();
@@ -19,6 +28,43 @@ $app->match('/login', function () use ( $app, $master ) {
 	return $app->redirect('./sale' );
 	
 })->method('GET|POST');
+
+$app->match('/report', function () use ( $app, $master,$stock ) {
+
+	$isActive = $master->validateSessionActive();
+	if( !$isActive->redirect ){
+		$template 	= 'login.twig';
+		$array 		= array( );
+		return new Response(
+			$app['twig']->render( $template, $array )
+		);
+	}
+		
+		$template 	= 'report.twig';
+		$array 		= array("menu" => $master->getMenu(), "table" => $stock->getReport() );
+		return new Response(
+			$app['twig']->render( $template, $array )
+		);
+	
+})->method('GET|POST')->bind('report');
+
+
+$app->match('/printReport', function () use ( $app, $stock ) {
+
+	$date = "Reporte_".date("Y-m-d-H-i-s");
+
+	header("Content-Type:   application/vnd.ms-excel;");
+	header("Content-Disposition: attachment; filename={$date}.xls");  //File name extension was wrong
+	header("Expires: 0");
+	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	header("Cache-Control: private",false);
+	
+	echo $stock->getReport();
+	exit;
+
+	
+})->method('GET|POST');
+
 
 
 $app->match('/registersale', function () use ( $app, $sale, $client, $master ) {
@@ -44,7 +90,7 @@ $app->match('/bill/{id}', function ($id) use ( $app, $stock, $master ) {
 		$app['twig']->render( $template, $array )
 	);
 
-})->method('GET|POST')->value("id",false)->bind('bill');;
+})->method('GET|POST')->value("id",false)->bind('bill');
 
 
 $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider, $stock, $client, $sale, $master ) {

@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+
+{% block maincontent %}
+	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
+		<div class="inner-wrap">
+				{{menu|raw}}
+				<div class="row full-height split-page" style="padding:20px;">
+					<div id="main-tab">
+						{{table|raw}}
+						<div id="print-report" class="btn-new-item" onclick="printReport()">Descargar</div>
+					</div>
+				</div>
+			<a class="exit-off-canvas"></a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block mainjquery %}
+
+$("#print-report").click(function(){
+	$("#report-list").table2excel(); 
+});
+
+{% endblock %}

@@ -74,11 +74,13 @@ error_log($error_logic, 3, PATH_ROOT."/logs/errors.log");
 $app->error(function (\Exception $e, $code) use ($app) {
   switch ($code) {
   case 404:
-    $message = 'Lo sentimos, la pagina No existe';
+    $message = 'Lo sentimos, la pagina No existe 404';
+    #return $app->redirect('./error');
   break;
 
   default:
-    $message = 'Lo sentimos, la pagina No existe';
+    $message = 'Lo sentimos, la pagina No existe other';
+    return $app->redirect('./error');
   break;
   }
   echo $message;

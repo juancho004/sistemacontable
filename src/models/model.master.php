@@ -112,17 +112,17 @@ public function validateSessionActive()
 									modal_sms("<center><h5>Existen '.count($minStock).' producto(s) con stock bajo</h5></center>");
 								});
 							</script>
-							<section class="middle tab-bar-section">
+							<section class="middle tab-bar-section  alert-min-stock ">
 							<dl class="sub-nav">
 							<dt>Productos con stock Bajos</dt>
-							<dd class="active"><a href="#">'.count($minStock).'</a></dd>
+							<dd class="active"><span data-tooltip aria-haspopup="true" class="has-tip" title="Numero de productos que tiene stock bajo."><a href="#" style="cursor:pointer;" >'.count($minStock).'</a></span></dd>
 							</dl>
 							</section>';
 		}else{
 			$alertStock = '<section class="middle tab-bar-section">
 							<dl class="sub-nav">
 							<dt>Productos con stock Bajos</dt>
-							<dd class="active"><a href="#">0</a></dd>
+							<dd class="active"><span data-tooltip aria-haspopup="true" class="has-tip" title="Numero de productos que tiene stock bajo."><a href="#" style="cursor:pointer;" >0</a></span></dd>
 							</dl>
 							</section>';
 		}
@@ -142,15 +142,17 @@ public function validateSessionActive()
 			<ul class="off-canvas-list">
 				<li><label>Clientes</label></li>
 				<li class="active"><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'clientList')).'" >Clientes</a></li>
-				<li class="active"><a  href="#" onclick="newStock()" >Nuevos Clientes</a></li>
-				<li><label>Productos</label></li>
+				<!--<li class="active"><a  href="#" onclick="newStock()" >Nuevos Clientes</a></li>-->
+				<li><label>Mi Tienda</label></li>
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'productList')).'"  >Producto</a></li>
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'providerList')).'" >Proveedor</a></li>
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'stockList')).'" >Stock</a></li>
 				<li><label>Ventas</label></li>
 				<li><a  href="'.$this->app['url_generator']->generate('view', array('view' => 'sale')).'" >Ventas</a></li>
 				<li><label>Recibos de ventas</label></li>
-				<li><a  href="'.$this->app['url_generator']->generate('bill', array('id' => '40')).'" >Recibos</a></li>
+				<li><a  href="'.$this->app['url_generator']->generate('bill').'" >Recibos</a></li>
+				<li><label>Reporteria</label></li>
+				<li><a  href="'.$this->app['url_generator']->generate('report').'" >Reportes</a></li>
 			</ul>
 		</aside>';
 

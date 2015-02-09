@@ -1,4 +1,10 @@
 var addItem = 0;
+
+function printReport()
+{
+	
+}
+
 function newItemSale()
 {
 	addItem++;

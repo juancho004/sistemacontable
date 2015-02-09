@@ -340,10 +340,26 @@ class ModelStock {
 		return true;
 	}
 
-	public function getBill($id)
+	public function getBill($id=false)
 	{
 
-		$query = "SELECT DISTINCT(c.name), c.lastName, c.nit, s.registerDate
+		
+		if(!$id){
+			$query = "SELECT s.id, s.registerDate
+						FROM fc_sale s
+						ORDER BY registerDate ASC";
+			$listSale = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+
+			$listClient = array();
+			$listProduct = array();
+			$listBill = array();
+			$listDate = array();
+			
+
+			foreach ($listSale as $keySale => $sale ) {
+				
+				$query = "SELECT DISTINCT(c.name), c.lastName, c.nit, p.name as product, b.totalProduct, p.userPrice
 					FROM fc_bill as b
 					INNER JOIN fc_sale as s
 					ON s.id = b.id_sale
@@ -352,59 +368,192 @@ class ModelStock {
 					INNER JOIN fc_product as p
 					ON p.id = sk.id_product
 					INNER JOIN fc_client as c
-					ON c.id = s.id_client
-					WHERE b.id_sale = {$id}";
+					ON c.id = s.id_client 
+					WHERE b.id_sale = {$sale['id']} ";
+				
+				$bill = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
-		$client = $this->app['dbs']['mysql_silex']->fetchAll($query);
+					foreach ($bill as $key => $value) {
 
-		$table = '<center><table role="grid" width="80%"><caption>RECIBO DE COMPRA</caption>';
+						if($key == 0){
+							$listClient[] = array(
+								"id" => $value['name'],
+								"name" => $value['name'],
+								"lastName" => $value['lastName'],
+								"nit" => $value['nit']
+							);
+						}
+					}
 
-		
-		foreach ($client as $key => $value) {
+					foreach ($bill as $key => $product) {
+						$listProduct[$keySale][] = array(
+							"product" => $product['product']." Q.".$product['userPrice']." c/u",
+							"totalProduct" => $product['totalProduct'],
+							"price" => ($product['totalProduct'] * $product['userPrice'] )
+						);
+					}
+				
+			}
 
+			foreach ($listSale as $key => $valueDate) {
+				$listDate[] = array( "registerDate" => $valueDate['registerDate'] );
+			}
+
+			
+
+
+			foreach ($listClient as $key => $valClient) {
+				$listBill[] = array_merge( $valClient, array( "registerDate" => $listDate[$key]['registerDate'] ), array( "productoList" => $listProduct[$key]) );
+			}
+
+			$table = '';
+			foreach ($listBill as $key => $bill) {
+
+				$table.= '<center><table role="grid" width="80%"><caption>RECIBO DE COMPRA #'.($key+1).'</caption>';
+
+				$table.= '<tr>';
+				$table.= '<th colspan="3" >Fecha Registro: '.$bill['registerDate'].'</th>';
+				$table.= '</tr>';
+
+				$table.= '<tr>';
+				$table.= '<th>Cliente: '.$bill['name'].' '.$bill['lastName'].'</th>';
+				$table.= '<th colspan="2">NIT: '.$bill['nit'].'</th>';
+				$table.= '</tr>';
+				$table.= '<tr>';
+				
+				$table.= '<th><center>Producto</center></th>';
+				$table.= '<th><center>Cantidad</center></th>';
+				$table.= '<th><center>Precio</center></th>';
+				$table.= '</tr>';
+
+
+				$totalPrice = 0;
+				foreach ($bill['productoList'] as $k => $value) {
+					$table.= '<tr>';
+					$table.= '<td><center>'.$value['product'].'</center></td>';
+					$table.= '<td><center>'.$value['totalProduct'].'</center></td>';
+					$table.= '<td><center>'.$value['price'].'</center></td>';
+					$table.= '</tr>';
+					$totalPrice = $totalPrice + $value['price'];
+				}
+
+				$table.= '<tr>';
+				$table.= '<th><center>Total</center></th>';
+				$table.= '<th></th>';
+				$table.= '<th><center>'.$totalPrice.'</center></th>';
+				$table.= '</tr>';
+				
+				$table.= '</table></center>';
+			}
+				$table.= '';
+
+			return $table;
+
+		}else{
+
+			$query = "SELECT DISTINCT(c.name), c.lastName, c.nit, s.registerDate
+						FROM fc_bill as b
+						INNER JOIN fc_sale as s
+						ON s.id = b.id_sale
+						INNER JOIN fc_stock as sk
+						ON sk.id = b.id_stock
+						INNER JOIN fc_product as p
+						ON p.id = sk.id_product
+						INNER JOIN fc_client as c
+						ON c.id = s.id_client
+						WHERE b.id_sale = {$id}";
+			$client = $this->app['dbs']['mysql_silex']->fetchAll($query);
+			$table = '<center><table role="grid" width="80%"><caption>RECIBO DE COMPRA</caption>';
+			
+			foreach ($client as $key => $value) {
+				$table.= '<tr>';
+				$table.= '<th colspan="3" >Fecha Registro: '.$value['registerDate'].'</th>';
+				$table.= '</tr>';
+				$table.= '<tr>';
+				$table.= '<th>Cliente: '.$value['name'].' '.$value['lastName'].'</th>';
+				$table.= '<th colspan="2" >NIT: '.$value['nit'].'</th>';
+				$table.= '</tr>';
+			}
+			
+			#query regisgtro de facturación
+			$query = "SELECT p.name, b.totalProduct , p.userPrice as price
+						FROM fc_bill as b
+						INNER JOIN fc_sale as s
+						ON s.id = b.id_sale
+						INNER JOIN fc_stock as sk
+						ON sk.id = b.id_stock
+						INNER JOIN fc_product as p
+						ON p.id = sk.id_product
+						WHERE b.id_sale = {$id}";
+			$bill = $this->app['dbs']['mysql_silex']->fetchAll($query);
 			$table.= '<tr>';
-			$table.= '<th>Fecha Registro: '.$value['registerDate'].'</th>';
+			$table.= '<th><center>Producto</center></th>';
+			$table.= '<th><center>Cantidad</center></th>';
+			$table.= '<th><center>Precio</center></th>';
+			$table.= '</tr>';
+			
+			$totalPrice = 0;
+			foreach ($bill as $key => $value) {
+				$table.= '<tr>';
+				$table.= '<td><center>'.$value['name'].' '.$value['price'].' c/u </center></td>';
+				$table.= '<td><center>'.$value['totalProduct'].'</center></td>';
+				$table.= '<td><center>'.$value['price'].'</center></td>';
+				$table.= '</tr>';
+				$totalPrice = $totalPrice + $value['price'];
+			}
+			$table.= '<tr>';
+			$table.= '<th><center>Total</center></th>';
+			$table.= '<th></th>';
+			$table.= '<th><center>'.$totalPrice.'</center></th>';
 			$table.= '</tr>';
 
-			$table.= '<tr>';
-			$table.= '<th>Cliente: '.$value['name'].' '.$value['lastName'].'</th>';
-			$table.= '<th>NIT: '.$value['nit'].'</th>';
-			$table.= '</tr>';
+			$table.= '</table></center>';
+			return $table;
 		}
-		
-
-		#query regisgtro de facturación
-		$query = "SELECT p.name, b.totalProduct 
-					FROM fc_bill as b
-					INNER JOIN fc_sale as s
-					ON s.id = b.id_sale
-					INNER JOIN fc_stock as sk
-					ON sk.id = b.id_stock
-					INNER JOIN fc_product as p
-					ON p.id = sk.id_product
-					WHERE b.id_sale = {$id}";
-
-		$bill = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
 
+	}
+
+	public function getReport()
+	{
+		$query = "SELECT id FROM  fc_stock";
+		$stock = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+		$table = '<table id="report-list" role="grid" width="80%"><caption>Reporteria</caption>';
 		$table.= '<tr>';
 		$table.= '<th><center>Producto</center></th>';
-		$table.= '<th><center>Cantidad</center></th>';
+		$table.= '<th><center>Total Vendidos</center></th>';
+		$table.= '<th><center>Precio Unitario</center></th>';
+		$table.= '<th><center>Costo Total</center></th>';
+		$table.= '<th><center>En Stock</center></th>';
 		$table.= '</tr>';
+		foreach ($stock as $key => $valStock) {
 
-		
-		foreach ($bill as $key => $value) {
-			$table.= '<tr>';
-			$table.= '<td><center>'.$value['name'].'</center></td>';
-			$table.= '<td><center>'.$value['totalProduct'].'</center></td>';
-			$table.= '</tr>';
+			$query = "SELECT p.name as nameProduct, SUM(b.totalProduct) as totalProduct, p.userPrice as unitPrice, (p.userPrice*SUM(b.totalProduct)) as totalPrice, s.totalStock 
+					FROM fc_bill as b
+					INNER JOIN fc_stock as s
+					ON s.id = b.id_stock
+					INNER JOIN fc_product as p
+					ON p.id = s.id_product
+					where b.id_stock = {$valStock['id']}";
+			$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+			foreach ($list as $key => $value) {
+				$table.= '<tr>';
+				$table.= '<th><center>'.$value['nameProduct'].'</center></th>';
+				$table.= '<th><center>'.$value['totalProduct'].'</center></th>';
+				$table.= '<th><center>'.$value['unitPrice'].'</center></th>';
+				$table.= '<th><center>'.$value['totalPrice'].'</center></th>';
+				$table.= '<th><center>'.$value['totalStock'].'</center></th>';
+				$table.= '</tr>';
+			}
+
+
 		}
-		
-		$table.= '</table></center>';
+		$table.="</table>";
 
 		return $table;
-
-
+		
 	}
 
 }
