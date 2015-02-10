@@ -3,36 +3,29 @@
 {% block maincontent %}
 	<div class="off-canvas-wrap docs-wrap" data-offcanvas="">
 		<div class="inner-wrap">
-			{% block mainmenu %}
 				{{menu|raw}}
-			{% endblock %}
 
-			{% block mainalert %}
-				<div id="mainAlert1" data-alert class="alert-box" tabindex="0" aria-live="assertive" role="dialogalert">
+				<!--div id="mainAlert1" data-alert class="alert-box" tabindex="0" aria-live="assertive" role="dialogalert">
 					<span>Mensaje de alerta</span>
 					<button href="#" tabindex="0" class="close" aria-label="Close Alert">&times;</button>
 				</div>
 				<span data-tooltip aria-haspopup="true" class="has-tip" title="Tooltips are awesome, you should totally use them!">
 					extended information
-				</span>
-			{% endblock %}
+				</span-->
 
-			{% block content %}
 					<form id="register-stock" name="register-stock" method="post" >
-
-						<div class="row medium-uncollapse large-collapse">
-							<div class="large-12 columns">
-								<label>Proveedor:
-									{{provider|raw}}
-								</label>
-							</div>
-						</div>
 
 						<div class="row medium-uncollapse large-collapse">
 							<div class="large-12 columns">
 								<label>Producto:
 									{{product|raw}}
 								</label>
+							</div>
+						</div>
+
+						<div class="row medium-uncollapse large-collapse">
+							<div class="large-12 columns">
+								<input id="select_provider" type="hidden" name="select_provider" value="" />
 							</div>
 						</div>
 
@@ -61,11 +54,37 @@
 						</div>
 
 					</form>
-			{% endblock %}
 			<a class="exit-off-canvas"></a>
 		</div>
 	</div>
 {% endblock %}
 
 {% block mainjquery %}
+
+	$("#select_product").change(function(e){
+
+		var id = $( "#select_product option:selected" ).val();
+
+		jQuery.ajax({
+			url: basepath+'/index.php/crud/provider/geId',
+			type: 'POST',
+			async: true,
+			data: {
+				params:[id]
+			},
+			dataType: 'json',
+			beforeSend: function(xhr){
+				$.fancybox.showLoading();
+			},
+			success: function(json){
+				$("#select_provider").val(json.id);
+			},	
+			complete: function(xhr, textStatus){
+				jQuery.fancybox.hideLoading();
+			}
+		});
+		
+		
+
+	});
 {% endblock %}

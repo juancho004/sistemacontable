@@ -48,8 +48,8 @@ class ModelClient {
 					return $exist;
 				}
 
-				$query = "insert into {$table} (name,lastName,nit,address,phoneNumber) ";
-				$query.= "values ('".$dataForm->name."','".$dataForm->lastName."',".$dataForm->phone.",'".$dataForm->address."','".$dataForm->nit."')";
+				$query = "insert into {$table} (name,lastName,nit,address,phoneNumber,email,comment) ";
+				$query.= "values ('".$dataForm->name."','".$dataForm->lastName."',".$dataForm->phone.",'".$dataForm->address."','".$dataForm->nit."','".$dataForm->email."','".$dataForm->comment."')";
 				return $this->insert($query,$table);
 
 			break;
@@ -57,12 +57,12 @@ class ModelClient {
 			case 'read':
 
 				$query = "SELECT * FROM {$table} ";
-				return $this->getListStock($query);
+				return $this->getListClient($query);
 			break;
 
 			case 'edit':
 				$query = "SELECT * FROM {$table} WHERE id = {$params}";
-				return $this->getListStock($query,true);
+				return $this->getListClient($query,true);
 			break;
 
 			case 'update':
@@ -77,6 +77,8 @@ class ModelClient {
 				$dataForm->phone 	= $data['phone'];
 				$dataForm->address 	= $data['address'];
 				$dataForm->nit 		= $data['nit'];
+				$dataForm->email 		= $data['email'];
+				$dataForm->comment 		= $data['comment'];
 
 				$isValid 			= $this->validateEmptyForm($dataForm);
 
@@ -84,7 +86,7 @@ class ModelClient {
 					return $isValid;
 				}
 		
-				return $this->update('UPDATE '.$table.' SET name="'.$this->app->escape($dataForm->name).'", lastName="'.$this->app->escape($dataForm->lastName).'",nit="'.$this->app->escape($dataForm->nit).'",address="'.$this->app->escape($dataForm->address).'",phoneNumber='.$this->app->escape($dataForm->phone).' WHERE id = '.$dataForm->id.' ');
+				return $this->update('UPDATE '.$table.' SET name="'.$this->app->escape($dataForm->name).'", lastName="'.$this->app->escape($dataForm->lastName).'",nit="'.$this->app->escape($dataForm->nit).'",address="'.$this->app->escape($dataForm->address).'",phoneNumber='.$this->app->escape($dataForm->phone).',email="'.$this->app->escape($dataForm->email).'",comment="'.$this->app->escape($dataForm->comment).'" WHERE id = '.$dataForm->id.' ');
 				
 			break;
 
@@ -139,7 +141,7 @@ class ModelClient {
 		return $response;
 	}
 
-	public function getListStock($query,$action=false)
+	public function getListClient($query,$action=false)
 	{
 
 
@@ -155,6 +157,8 @@ class ModelClient {
 					<td>'.$value['nit'].'</td>
 					<td>'.$value['address'].'</td>
 					<td>'.$value['phoneNumber'].'</td>
+					<td>'.$value['email'].'</td>
+					<td>'.$value['comment'].'</td>
 					<td>
 						<img onClick="crudClient( \''.$value['id'].'\',\'delete\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-delete.svg" >
 						<img onClick="crudClient( \''.$value['id'].'\',\'edit\');" src="'.$this->app['source'].'home/foundation-icons/svgs/fi-page-edit.svg" >
@@ -205,7 +209,26 @@ class ModelClient {
 										<input id="nit" type="text" placeholder="Ingresa nombre de producto" name="nit" value="'.$value['nit'].'" />
 									</label>
 								</div>
-							</div>';
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Email:
+										<input id="email" type="text" placeholder="Ingresa nombre de producto" name="email" value="'.$value['email'].'" />
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Anotaciones:
+										<textarea  id="comment" name="comment">'.$value['comment'].'</textarea>
+										
+									</label>
+								</div>
+							</div>
+
+							';
 				}				
 			}
 

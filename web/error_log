@@ -1,2 +1,1 @@
-[27-Jan-2015 23:02:58 America/Guatemala] PHP Fatal error:  Call to a member function query() on a non-object in /home/jcbarreno/public_html/sistema_inventario/dev/vendor/doctrine/dbal/lib/Doctrine/DBAL/Connection.php on line 641
-[05-Feb-2015 15:07:47 America/Guatemala] PHP Fatal error:  Call to a member function validateSession() on a non-object in /home/jcbarreno/public_html/sistema_inventario/dev/src/controllers/controllers.php on line 162
+[09-Feb-2015 16:23:51 America/Guatemala] PHP Fatal error:  Class 'ModelStock' not found in /home/jcbarreno/public_html/sistema_inventario/dev/src/bootstrap.php on line 47

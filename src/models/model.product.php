@@ -16,6 +16,9 @@ class ModelProduct {
 		$this->prefix = $prefix;
 		$this->app 	= $app;
 		$this->tabproduct 	= "{$this->prefix}product";
+		$this->tabProvider 	= "{$this->prefix}provider";
+
+		$this->provider 	= new ModelProvider($app,$prefix);
 	}
 
 	public function crudProduct($view=false,$params=false)
@@ -30,20 +33,26 @@ class ModelProduct {
 				foreach ($params as $key => $value) {
 					$data[$value['name']] = $value['value'];
 				}
+
 				$pricePriver 				= (int)$data['priceProvider'].".".(int)$data['priceProviderCent'];
 				$priceClient 				= (int)$data['pricelient'].".".(int)$data['pricelientCent'];
 				$dataForm->name 			= $data['name'];
 				$dataForm->description 		= $data['description'];
 				$dataForm->providerPrice 	= $pricePriver;
 				$dataForm->userPrice 		= $priceClient;
+				$dataForm->idProvider 		= $data['select_provider'];
+				$dataForm->numberBill 		= $data['numberBill'];
+
+				
 				$isValid 					= $this->validateEmptyForm($dataForm);
 
 				if ( !$isValid->status ){
 					return $isValid;
 				}
 
-				$query = "insert into {$table} (name,description,providerPrice,userPrice) ";
-				$query.= "values ('".$dataForm->name."','".$dataForm->description."',".$dataForm->providerPrice.",".$dataForm->userPrice.")";
+				$query = "insert into {$table} (name,description,providerPrice,userPrice,id_provider,numberBill) ";
+				$query.= "values ('".$dataForm->name."','".$dataForm->description."',".$dataForm->providerPrice.",".$dataForm->userPrice.",".$dataForm->idProvider.",".$dataForm->numberBill.")";
+				
 				return $this->insert($query,$table);
 			break;
 			
@@ -68,13 +77,18 @@ class ModelProduct {
 				$dataForm->description 		= $data['description'];
 				$dataForm->providerPrice 	= $pricePriver;
 				$dataForm->userPrice 		= $priceClient;
+				$dataForm->idProvider 		= $data['select_provider'];
+				$dataForm->numberBill 		= $data['numberBill'];
+
+
+
 				$isValid 					= $this->validateEmptyForm($dataForm);
 
 				if ( !$isValid->status ){
 					return $isValid;
 				}
 				
-				return $this->update('UPDATE '.$table.' SET name="'.$this->app->escape($dataForm->name).'", description="'.$this->app->escape($dataForm->description).'", providerPrice='.$dataForm->providerPrice.', userPrice='.$dataForm->userPrice.' WHERE id = '.$dataForm->id.'');
+				return $this->update('UPDATE '.$table.' SET id_provider="'.$this->app->escape($dataForm->idProvider).'",numberBill="'.$this->app->escape($dataForm->numberBill).'", name="'.$this->app->escape($dataForm->name).'", description="'.$this->app->escape($dataForm->description).'", providerPrice='.$dataForm->providerPrice.', userPrice='.$dataForm->userPrice.' WHERE id = '.$dataForm->id.'');
 				
 			break;
 
@@ -94,6 +108,7 @@ class ModelProduct {
 		
 		$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
 		$select = "<select id='select_product' name='select_product' >";
+		$select.='<option value="0" selected>Selecciona un producto</option>';
 
 		foreach ($list as $key => $value) {
 			if( $value['id'] == $id ){
@@ -114,6 +129,107 @@ class ModelProduct {
 		$response->reloadPage	= true;
 		$response->message 	= ($resp)? "Registro actualizado exitosamente":"Ocurrio un error para actualizar el registro, intenta de nuevo más tarde";
 		return $response;
+	}
+
+	public function getProductoCreateTable()
+	{
+		$htmlList='
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Proveedor:
+										'.$this->provider->getProvider().'
+									</label>
+								</div>
+							</div>
+
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>No. Factura:
+										<input id="numberBill" type="text" placeholder="Ingresa numero de fasctura de compra" name="numberBill" value="" />
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Nombre:
+										<input id="name" type="text" placeholder="Ingresa nombre de producto" name="name" value="" />
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Descripción:
+										<textarea id="description" placeholder="Ingresa una descripción" name="description" ></textarea>
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-36columns">
+									<label>Precio Proveedor:
+										<div class="row medium-uncollapse large-collapse">
+											<div class="large-2 columns">
+												<div class="row collapse prefix-round">
+													<div class="small-3 columns">
+														<a href="#" class="button prefix">Q.</a>
+													</div>
+													<div class="small-9 columns">
+														<input type="text" placeholder="00" name="priceProvider" value="" >
+													</div>
+												</div>
+											</div>
+
+											<div class="large-2 columns">
+												<div class="row collapse prefix-round">
+													<div class="small-3 columns">
+														<a href="#" class="button prefix">¢</a>
+													</div>
+													<div class="small-9 columns">
+														<input type="text" placeholder="00" name="priceProviderCent" value="" >
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-36columns">
+									<label>Precio Cliente:
+										<div class="row medium-uncollapse large-collapse">
+											<div class="large-2 columns">
+												<div class="row collapse prefix-round">
+													<div class="small-3 columns">
+														<a href="#" class="button prefix">Q.</a>
+													</div>
+													<div class="small-9 columns">
+														<input type="text" placeholder="00" name="pricelient" value="" >
+													</div>
+												</div>
+											</div>
+
+											<div class="large-2 columns">
+												<div class="row collapse prefix-round">
+													<div class="small-3 columns">
+														<a href="#" class="button prefix">¢</a>
+													</div>
+													<div class="small-9 columns">
+														<input type="text" placeholder="00" name="pricelientCent" value="" >
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</label>
+								</div>
+							</div>';
+
+			return $htmlList;
 	}
 
 	public function getListProducto($query,$action=false)
@@ -144,6 +260,22 @@ class ModelProduct {
 
 					$htmlList.='<input type="hidden" value="'.$value['id'].'" name="id" />';
 					$htmlList.='
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>Proveedor:
+										'.$this->provider->getProvider($value['id_provider']).'
+									</label>
+								</div>
+							</div>
+
+							<div class="row medium-uncollapse large-collapse">
+								<div class="large-12 columns">
+									<label>No. Factura:
+										<input id="numberBill" type="text" placeholder="Ingresa numero de fasctura de compra" name="numberBill" value="'.$value['numberBill'].'" />
+									</label>
+								</div>
+							</div>
+
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
 									<label>Nombre:

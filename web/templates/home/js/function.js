@@ -2,7 +2,8 @@ var addItem = 0;
 
 function printReport()
 {
-	
+	top.location=basepath+'/index.php/printReport';
+	return false;
 }
 
 function newItemSale()
@@ -123,7 +124,7 @@ function registerProduct()
 				});
 			}else{
 				modal_sms( '<span>'+json.message+'</span>' );				
-				top.location=basepath;
+				//top.location=basepath+'/product/productList';
 			}
 		},	
 		complete: function(xhr, textStatus){

@@ -27,8 +27,8 @@
 				e.template += "<x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>";
 				e.tableRows = "";
 
-				console.log(e);
-				return false;
+				//console.log(e);
+				//return false;
 
 				// get contents of table except for exclude
 				$(e.element).find("tr").not(this.settings.exclude).each(function (i,o) {

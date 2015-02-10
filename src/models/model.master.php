@@ -152,7 +152,8 @@ public function validateSessionActive()
 				<li><label>Recibos de ventas</label></li>
 				<li><a  href="'.$this->app['url_generator']->generate('bill').'" >Recibos</a></li>
 				<li><label>Reporteria</label></li>
-				<li><a  href="'.$this->app['url_generator']->generate('report').'" >Reportes</a></li>
+				<li><a  href="'.$this->app['url_generator']->generate('report', array("type"=> "product")).'" >Reporte Productos</a></li>
+				<li><a  href="'.$this->app['url_generator']->generate('report', array("type"=> "client")).'" >Reporte Clientes</a></li>
 			</ul>
 		</aside>';
 

@@ -81,6 +81,13 @@ class ModelProvider {
 			$id = (int)$params;
 				return $this->delete("DELETE FROM {$table} WHERE id = {$id}");
 			break;
+
+			case 'geId':
+				$id = $params[0];
+				$query = "SELECT id_provider FROM fc_product WHERE id = {$id}";
+				$id = $this->app['dbs']['mysql_silex']->fetchAssoc($query);
+				return array("id"=>$id['id_provider']);
+			break;
 		}
 
 		return $response;

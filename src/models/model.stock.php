@@ -48,12 +48,15 @@ class ModelStock {
 				}
 
 				$exist = $this->validateExistRegister($dataForm->id_provider,$dataForm->id_product,$table);
+
+				
 				if ( !$exist->status ){
 					return $exist;
 				}
 
 				$query = "insert into {$table} (totalStock,minStock,id_provider,id_product,realStock) ";
 				$query.= "values (".$dataForm->totalStock.",".$dataForm->minStock.",".$dataForm->id_provider.",".$dataForm->id_product.",".$dataForm->totalStock.")";
+
 				return $this->insert($query,$table);
 
 			break;
@@ -143,13 +146,13 @@ class ModelStock {
 				$response->message 	= "El registro ya existe, si quieres actualizarlo, ve a la sección de actualización";
 			}else{
 				$response->status 	= TRUE;
-				$response->message 	= "Registro creado exitosamente";
+				$response->message 	= "Ok";
 			}
 
 			return $response;
 		}catch(Exception $e){
 			$response->status 	= FALSE;
-			$response->message 	= "Error #01: No se pudo insertar en en la tabla {$table}.";
+			$response->message 	= "Error #0: error en codigo o consulta.";
 			return $e->getMessage();
 		}
 
@@ -194,18 +197,20 @@ class ModelStock {
 
 					$htmlList.='<input type="hidden" value="'.$value['id'].'" name="id" />';
 					$htmlList.='
+							
+
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
-									<label>Proveedor:
-										'.$this->provider->getProvider($value['id_provider']).'
+									<label>Producto:
+										'.$this->product->getProduct($value['id_product']).'
 									</label>
 								</div>
 							</div>
 
 							<div class="row medium-uncollapse large-collapse">
 								<div class="large-12 columns">
-									<label>Producto:
-										'.$this->product->getProduct($value['id_product']).'
+									<label>Proveedor:
+										'.$this->provider->getProvider($value['id_provider']).'
 									</label>
 								</div>
 							</div>
@@ -343,8 +348,10 @@ class ModelStock {
 	public function getBill($id=false)
 	{
 
+
 		
 		if(!$id){
+
 			$query = "SELECT s.id, s.registerDate
 						FROM fc_sale s
 						ORDER BY registerDate ASC";
@@ -463,6 +470,7 @@ class ModelStock {
 						ON c.id = s.id_client
 						WHERE b.id_sale = {$id}";
 			$client = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
 			$table = '<center><table role="grid" width="80%"><caption>RECIBO DE COMPRA</caption>';
 			
 			foreach ($client as $key => $value) {
@@ -486,6 +494,8 @@ class ModelStock {
 						ON p.id = sk.id_product
 						WHERE b.id_sale = {$id}";
 			$bill = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+
 			$table.= '<tr>';
 			$table.= '<th><center>Producto</center></th>';
 			$table.= '<th><center>Cantidad</center></th>';
@@ -501,6 +511,7 @@ class ModelStock {
 				$table.= '</tr>';
 				$totalPrice = $totalPrice + $value['price'];
 			}
+
 			$table.= '<tr>';
 			$table.= '<th><center>Total</center></th>';
 			$table.= '<th></th>';
@@ -508,51 +519,88 @@ class ModelStock {
 			$table.= '</tr>';
 
 			$table.= '</table></center>';
+
 			return $table;
 		}
 
 
 	}
 
-	public function getReport()
+	public function getReport($type)
 	{
-		$query = "SELECT id FROM  fc_stock";
-		$stock = $this->app['dbs']['mysql_silex']->fetchAll($query);
 
-		$table = '<table id="report-list" role="grid" width="80%"><caption>Reporteria</caption>';
-		$table.= '<tr>';
-		$table.= '<th><center>Producto</center></th>';
-		$table.= '<th><center>Total Vendidos</center></th>';
-		$table.= '<th><center>Precio Unitario</center></th>';
-		$table.= '<th><center>Costo Total</center></th>';
-		$table.= '<th><center>En Stock</center></th>';
-		$table.= '</tr>';
-		foreach ($stock as $key => $valStock) {
 
-			$query = "SELECT p.name as nameProduct, SUM(b.totalProduct) as totalProduct, p.userPrice as unitPrice, (p.userPrice*SUM(b.totalProduct)) as totalPrice, s.totalStock 
-					FROM fc_bill as b
-					INNER JOIN fc_stock as s
-					ON s.id = b.id_stock
-					INNER JOIN fc_product as p
-					ON p.id = s.id_product
-					where b.id_stock = {$valStock['id']}";
-			$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
+		switch ($type) {
 
-			foreach ($list as $key => $value) {
+			case 'product':
+
+				$query = "SELECT id FROM  fc_stock";
+				$stock = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+				$table = '<table id="report-list" role="grid" width="80%"><caption>Reporteria</caption>';
 				$table.= '<tr>';
-				$table.= '<th><center>'.$value['nameProduct'].'</center></th>';
-				$table.= '<th><center>'.$value['totalProduct'].'</center></th>';
-				$table.= '<th><center>'.$value['unitPrice'].'</center></th>';
-				$table.= '<th><center>'.$value['totalPrice'].'</center></th>';
-				$table.= '<th><center>'.$value['totalStock'].'</center></th>';
+				$table.= '<th><center>Producto</center></th>';
+				$table.= '<th><center>Total Vendidos</center></th>';
+				$table.= '<th><center>Precio Unitario</center></th>';
+				$table.= '<th><center>Costo Total</center></th>';
+				$table.= '<th><center>En Stock</center></th>';
 				$table.= '</tr>';
-			}
+				foreach ($stock as $key => $valStock) {
+
+					$query = "SELECT p.name as nameProduct, SUM(b.totalProduct) as totalProduct, p.userPrice as unitPrice, (p.userPrice*SUM(b.totalProduct)) as totalPrice, s.totalStock 
+							FROM fc_bill as b
+							INNER JOIN fc_stock as s
+							ON s.id = b.id_stock
+							INNER JOIN fc_product as p
+							ON p.id = s.id_product
+							where b.id_stock = {$valStock['id']}";
+					$list = $this->app['dbs']['mysql_silex']->fetchAll($query);
+
+					foreach ($list as $key => $value) {
+						$table.= '<tr>';
+						$table.= '<th><center>'.$value['nameProduct'].'</center></th>';
+						$table.= '<th><center>'.$value['totalProduct'].'</center></th>';
+						$table.= '<th><center>'.$value['unitPrice'].'</center></th>';
+						$table.= '<th><center>'.$value['totalPrice'].'</center></th>';
+						$table.= '<th><center>'.$value['totalStock'].'</center></th>';
+						$table.= '</tr>';
+					}
 
 
+				}
+				$table.="</table>";
+
+				return $table;
+			break;
+			
+			case 'client':
+
+				/*
+					SELECT p.name, b.totalProduct
+					FROM fc_client as c
+
+					INNER JOIN fc_sale as s
+					ON s.id_client = c.id
+
+					INNER JOIN fc_bill as b
+					ON b.id_sale = s.id
+
+					INNER JOIN fc_stock as st
+					ON b.id_stock = st.id
+
+					INNER JOIN fc_product as p
+					ON st.id_product = p.id
+				*/
+
+				echo 'x';exit;
+			break;
+			exit;
+
+			default:
+				# code...
+			break;
 		}
-		$table.="</table>";
 
-		return $table;
 		
 	}
 

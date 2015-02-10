@@ -48,7 +48,7 @@ tr.header-option * {
 
 .inner-wrap
 {
-	min-height: 500px !important;
+	min-height: 100% !important;
 }
 .signup-panel i {
 	font-size: 30px;

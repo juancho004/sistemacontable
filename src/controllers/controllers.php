@@ -29,7 +29,7 @@ $app->match('/login', function () use ( $app, $master ) {
 	
 })->method('GET|POST');
 
-$app->match('/report', function () use ( $app, $master,$stock ) {
+$app->match('/report/{type}', function ($type) use ( $app, $master,$stock ) {
 
 	$isActive = $master->validateSessionActive();
 	if( !$isActive->redirect ){
@@ -41,12 +41,12 @@ $app->match('/report', function () use ( $app, $master,$stock ) {
 	}
 		
 		$template 	= 'report.twig';
-		$array 		= array("menu" => $master->getMenu(), "table" => $stock->getReport() );
+		$array 		= array("menu" => $master->getMenu(), "table" => $stock->getReport($type) );
 		return new Response(
 			$app['twig']->render( $template, $array )
 		);
 	
-})->method('GET|POST')->bind('report');
+})->method('GET|POST')->bind('report')->value("type",false);
 
 
 $app->match('/printReport', function () use ( $app, $stock ) {
@@ -70,7 +70,6 @@ $app->match('/printReport', function () use ( $app, $stock ) {
 $app->match('/registersale', function () use ( $app, $sale, $client, $master ) {
 
 	$response = $sale->registerSale($_POST);
-	#_pre($response);exit;
 	return $app->redirect('./bill/'.$response->idSale );
 	
 })->method('GET|POST');
@@ -85,7 +84,9 @@ $app->match('/itemSale', function () use ( $app, $sale ) {
 $app->match('/bill/{id}', function ($id) use ( $app, $stock, $master ) {
 
 	$template 	= 'bill.twig';
-	$array 		= array( "table" => $stock->getBill($id),"menu" => $master->getMenu() );
+	$array 		= array( "table" => $stock->getBill($id), "menu" => $master->getMenu() );
+
+	#_pre($array);exit;
 	return new Response(
 		$app['twig']->render( $template, $array )
 	);
@@ -122,7 +123,7 @@ $app->match('/{view}/{id}', function ($view,$id) use ( $app ,$product, $provider
 
 		case 'product':
 			$template 	= 'product.twig';
-			$array 		= array("menu" => $master->getMenu());
+			$array 		= array("menu" => $master->getMenu(), "table" => $product->getProductoCreateTable() );
 		break;
 		/**
 		PROVIDER

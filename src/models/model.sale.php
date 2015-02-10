@@ -81,7 +81,7 @@ class ModelSale {
 		foreach ($listSale as $key => $value) {
 			$query = "INSERT INTO fc_bill (totalProduct, id_sale, id_stock) VALUES (".$value['total'].", ".$id_sale.", ".$value['item'].") ";
 			$return = (boolean)$this->app['dbs']['mysql_silex']->executeQuery($query);
-			if( $return ){
+			if( !$return ){
 				$arrayError[] = array( "id" =>  $value['item'] , "total" => $value['total'] , "status" => false );
 			}
 		}
